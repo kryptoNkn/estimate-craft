@@ -1,0 +1,50 @@
+   0.004088166s  INFO prepare_target{force=false package_id=backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend) target="backend"}: cargo::core::compiler::fingerprint: fingerprint error for backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend)/Check { test: false }/TargetInner { name: "backend", doc: true, ..: with_path("/Users/kryptonkn/Desktop/constructor-wm/backend/src/main.rs", Edition2024) }
+   0.004109125s  INFO prepare_target{force=false package_id=backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend) target="backend"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/.fingerprint/backend-423727373bf76ec0/bin-backend`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <std::backtrace::Backtrace>::create
+   1: <std::backtrace::Backtrace>::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_with_exec
+   9: cargo::ops::cargo_compile::compile
+  10: cargo::commands::check::exec
+  11: <cargo::cli::Exec>::exec
+  12: cargo::main
+  13: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  14: std::rt::lang_start::<()>::{closure#0}
+  15: std::rt::lang_start_internal
+  16: _main
+   0.006855541s  INFO prepare_target{force=false package_id=backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend) target="backend"}: cargo::core::compiler::fingerprint: fingerprint error for backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend)/Check { test: true }/TargetInner { name: "backend", doc: true, ..: with_path("/Users/kryptonkn/Desktop/constructor-wm/backend/src/main.rs", Edition2024) }
+   0.006864625s  INFO prepare_target{force=false package_id=backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend) target="backend"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/.fingerprint/backend-136112305066e6d1/test-bin-backend`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <std::backtrace::Backtrace>::create
+   1: <std::backtrace::Backtrace>::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_with_exec
+   9: cargo::ops::cargo_compile::compile
+  10: cargo::commands::check::exec
+  11: <cargo::cli::Exec>::exec
+  12: cargo::main
+  13: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  14: std::rt::lang_start::<()>::{closure#0}
+  15: std::rt::lang_start_internal
+  16: _main
+    Checking backend v0.1.0 (/Users/kryptonkn/Desktop/constructor-wm/backend)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
