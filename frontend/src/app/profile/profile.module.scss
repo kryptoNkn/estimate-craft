@@ -1,0 +1,278 @@
+@import '../../styles/variables.scss';
+
+.container {
+  padding: 140px 32px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+
+    .userInfo {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .avatarWrapper {
+        position: relative;
+
+        .avatar {
+          width: 76px;
+          height: 76px;
+          border-radius: $radius-pill;
+          background: radial-gradient(circle at 30% 30%, #1f242d, #0d0f12);
+          border: 1px solid $border-gold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .badgeOnline {
+          position: absolute;
+          bottom: 2px;
+          right: 2px;
+          width: 14px;
+          height: 14px;
+          background: #22c55e;
+          border: 2px solid $bg-dark;
+          border-radius: 50%;
+        }
+      }
+
+      .roleTag {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: $accent-gold;
+        background: $accent-gold-glow;
+        padding: 4px 10px;
+        border-radius: $radius-pill;
+        margin-bottom: 6px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 500;
+        color: $text-primary;
+      }
+
+      p {
+        color: $text-secondary;
+        font-size: 0.9rem;
+      }
+    }
+
+    // Стиль кнопки с объемным ховером из источника
+    .btnCreate {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: linear-gradient(180deg, #e5bd82 0%, #cfa86e 100%);
+      color: #0b0d10;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: $radius-pill;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      transition: all 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 12px 28px rgba(212, 175, 55, 0.35);
+      }
+    }
+  }
+
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-bottom: 36px;
+
+    .statCard {
+      background: $bg-card;
+      border: 1px solid $border-light;
+      padding: 20px 24px;
+      border-radius: $radius-card;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.2s ease;
+
+      &:hover {
+        border-color: rgba(212, 175, 55, 0.3);
+      }
+
+      .iconBox {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid $border-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .label {
+        font-size: 0.8rem;
+        color: $text-muted;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $text-primary;
+      }
+    }
+  }
+
+  .contentSection {
+    background: $bg-card;
+    border: 1px solid $border-light;
+    border-radius: $radius-card;
+    padding: 28px;
+
+    .tabsHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid $border-light;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+
+      .tabs {
+        display: flex;
+        gap: 12px;
+
+        button {
+          background: transparent;
+          border: none;
+          color: $text-muted;
+          font-size: 0.95rem;
+          font-weight: 500;
+          padding: 8px 16px;
+          border-radius: $radius-pill;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: $text-primary;
+          }
+
+          &.activeTab {
+            background: rgba(255, 255, 255, 0.06);
+            color: $accent-gold;
+            border: 1px solid $border-gold;
+          }
+        }
+      }
+
+      .btnFilter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: 1px solid $border-light;
+        color: $text-secondary;
+        padding: 8px 14px;
+        border-radius: $radius-pill;
+        font-size: 0.85rem;
+        cursor: pointer;
+
+        &:hover {
+          color: $text-primary;
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+
+    .projectList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .projectRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid $border-light;
+        border-radius: 14px;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.04);
+        }
+
+        .projectInfo {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+
+          .projectIcon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: $text-primary;
+            margin-bottom: 2px;
+          }
+
+          p {
+            font-size: 0.8rem;
+            color: $text-muted;
+          }
+        }
+
+        .projectActions {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+
+          .date {
+            font-size: 0.85rem;
+            color: $text-muted;
+          }
+
+          .btnOpen3D {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid $border-gold;
+            color: $accent-gold;
+            border-radius: $radius-pill;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .emptyState {
+      padding: 60px 0;
+      text-align: center;
+      color: $text-muted;
+    }
+  }
+}

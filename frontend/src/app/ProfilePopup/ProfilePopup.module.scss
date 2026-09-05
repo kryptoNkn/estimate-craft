@@ -1,0 +1,55 @@
+// components/ProfilePopup/ProfilePopup.module.scss
+@import '../../styles/variables.scss';
+
+.popup {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 280px;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  z-index: 101;
+
+  .header {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid $border-color;
+
+    .email {
+      font-size: 0.8rem;
+      color: $text-muted;
+    }
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: $radius-sm;
+      font-size: 0.9rem;
+      color: $text-primary;
+      transition: background $transition-fast;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: $accent-gold;
+      }
+
+      &.danger {
+        color: #ef4444;
+        &:hover {
+          background: rgba(239, 68, 68, 0.1);
+        }
+      }
+    }
+  }
+}

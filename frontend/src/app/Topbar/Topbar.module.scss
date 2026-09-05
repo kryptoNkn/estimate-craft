@@ -1,0 +1,95 @@
+// components/Topbar/Topbar.module.scss
+@import '../../styles/variables.scss';
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: $bg-glass;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid $border-color;
+  z-index: 100;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: $text-primary;
+
+    span {
+      color: $accent-gold;
+    }
+  }
+
+  .nav {
+    display: flex;
+    gap: 24px;
+
+    a {
+      font-size: 0.95rem;
+      color: $text-muted;
+      transition: color $transition-fast;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+  }
+
+  .profileWrapper {
+    position: relative;
+  }
+
+  .profileBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid $border-color;
+    padding: 6px 14px 6px 6px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      border-color: $accent-gold;
+      background: rgba(207, 168, 110, 0.05);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $accent-gold, #8a6c38);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .userInfo {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+
+      .name {
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .role {
+        font-size: 0.7rem;
+        color: $text-muted;
+      }
+    }
+  }
+}

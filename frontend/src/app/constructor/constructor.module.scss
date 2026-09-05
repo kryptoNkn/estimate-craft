@@ -1,0 +1,349 @@
+@import '../../styles/variables.scss';
+
+.pageWrapper {
+  padding-top: 80px;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  background: $bg-dark;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.viewportSection {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 80px); /* Фиксируем минимальную высоту для Canvas */
+  background: radial-gradient(circle at 50% 50%, #1a1e26 0%, $bg-dark 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+
+  .badge3D {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(19, 22, 28, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: $accent-gold;
+    padding: 8px 16px;
+    border-radius: $radius-pill;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.panelSection {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(23, 27, 34, 0.95);
+  backdrop-filter: blur(20px);
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.25);
+    border-radius: 4px;
+  }
+
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    .headerIcon {
+      color: $accent-gold;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: $text-primary;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  /* СТИЛИ ДЛЯ АККОРДЕОНА */
+  .accordionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .accordionSection {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+
+      &.openedSection {
+        border-color: rgba(212, 175, 55, 0.4);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .accordionHeader {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 18px;
+        background: transparent;
+        border: none;
+        color: $text-primary;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+
+        .accTitle {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: $accent-gold;
+        }
+      }
+
+      .accordionBody {
+        padding: 0 18px 18px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  }
+
+  .fieldBlock {
+    .blockHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      label {
+        font-size: 0.82rem;
+        color: $text-secondary;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .selectedSubtext {
+        font-size: 0.8rem;
+        color: $accent-gold;
+        font-weight: 500;
+      }
+    }
+
+    .selectorGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 10px;
+
+      .gridBtn {
+        position: relative;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: $text-primary;
+        padding: 12px 10px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 500;
+        text-align: center;
+        overflow: hidden;
+        outline: none;
+
+        &.active {
+          border-color: $accent-gold;
+          color: $accent-gold;
+          font-weight: 600;
+          background: rgba(212, 175, 55, 0.12);
+        }
+      }
+    }
+
+    .colorPairGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+
+      .pairCard {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+
+        &.activePair {
+          border-color: $accent-gold;
+          background: rgba(212, 175, 55, 0.08);
+
+          .pairLabel {
+            color: $accent-gold;
+            font-weight: 600;
+          }
+        }
+
+        .swatchPill {
+          position: relative;
+          display: flex;
+          width: 100%;
+          height: 30px;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+
+          .primaryPart { height: 100%; width: 65%; }
+          .secondaryPart { height: 100%; width: 35%; }
+
+          .checkBadge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: $accent-gold;
+            color: #000;
+            border-radius: 50%;
+            padding: 3px;
+            display: flex;
+          }
+        }
+
+        .colorMeta {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .pairLabel {
+            font-size: 0.78rem;
+            color: $text-secondary;
+          }
+
+          .hexCode {
+            font-size: 0.65rem;
+            color: $text-muted;
+            font-family: monospace;
+          }
+        }
+      }
+    }
+
+    .singleColorRow {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+
+      .colorCircle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        cursor: pointer;
+
+        &.activeCircle {
+          border-color: $accent-gold;
+          box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+        }
+      }
+    }
+  }
+
+  .bottomPanel {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    .priceCard {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+
+      .priceHeader {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        color: $text-muted;
+        text-transform: uppercase;
+      }
+
+      .priceValue {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: $accent-gold;
+        font-family: $font-serif;
+        margin-top: 6px;
+      }
+    }
+
+    .actionButtons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .btnPrimary {
+        background: linear-gradient(180deg, #e5bd82 0%, #cfa86e 100%);
+        color: #000;
+        font-weight: 600;
+        padding: 14px;
+        border: none;
+        border-radius: $radius-pill;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btnSecondaryRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+
+        button {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: $text-primary;
+          padding: 12px;
+          border-radius: $radius-pill;
+          cursor: pointer;
+          font-size: 0.85rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+        }
+      }
+    }
+  }
+}
