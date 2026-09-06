@@ -3,6 +3,10 @@ mod config;
 mod state;
 mod error;
 mod db;
+mod models;
+mod repositories;
+mod services;
+mod routes;
 
 use crate::{config::Config, state::AppState};
 
@@ -37,7 +41,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         config.server_port,
     );
 
-    let state = AppState { db };
+    let state = AppState {
+        db,
+        jwt_secret: config.jwt_secret,
+        jwt_expires_in_secs: config.jwt_expires_in_secs,
+    };
 
     let listener = TcpListener::bind(address).await?;
     let app = app::create_app(state);

@@ -14,6 +14,7 @@ struct ErrorBody {
 #[derive(Debug)]
 pub enum AppError {
     Validation(String), // 400
+    Unauthorized(String), // 401
     Conflict(String), // 409
     Internal, // 50
 }
@@ -23,10 +24,8 @@ impl AppError {
         match self {
             Self::Validation(msg) => (StatusCode::BAD_REQUEST, msg.as_str()),
             Self::Conflict(msg) => (StatusCode::CONFLICT, msg.as_str()),
-            Self::Internal => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "internal server error",
-            ),
+            Self::Internal => (StatusCode::INTERNAL_SERVER_ERROR, "internal server error"),
+            Self::Unauthorized(msg) => (StatusCode::UNAUTHORIZED, msg.as_str()),
         }
     }
 }
@@ -62,12 +61,9 @@ impl From<validator::ValidationErrors> for AppError {
         let message = err
             .field_errors()
             .values()
-            .next()
-            .and_then(|errors| errors.first())
-            .map(|e| e.code.as_ref())
-            .unwrap_or("validation failed")
-            .to_string();
-
+            .flat_map(|errors| errors.iter())
+            .find_map(|e| e.message.as_ref().map(|m| m.to_string()))
+            .unwrap_or_else(|| "validation failed".to_string());
         Self::Validation(message)
     }
 }

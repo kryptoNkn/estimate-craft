@@ -5,6 +5,8 @@ pub struct Config {
     pub server_host: String,
     pub server_port: u16,
     pub database_url: String,
+    pub jwt_secret: String,
+    pub jwt_expires_in_secs: u64,
 }
 
 impl Config {
@@ -20,10 +22,18 @@ impl Config {
 
         let database_url = env::var("DATABASE_URL")?;
 
+        let jwt_secret = env::var("JWT_SECRET")?;
+        let jwt_expires_in_secs = env::var("JWT_EXPIRES_IN_SECS")
+            .unwrap_or_else(|_| "3600".to_string())
+            .parse()
+            .expect("JWT_EXPIRES_IN_SECS must be a valid u64");
+
         Ok(Self {
             server_host,
             server_port,
             database_url,
+            jwt_secret,
+            jwt_expires_in_secs,
         })
     }
 }
