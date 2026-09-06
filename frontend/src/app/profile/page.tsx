@@ -1,17 +1,15 @@
-// components/profile/page.tsx
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  User, 
   Box, 
   Layers, 
   ShieldCheck, 
   Plus, 
   ArrowUpRight, 
-  ChevronRight, 
-  SlidersHorizontal 
+  SlidersHorizontal,
+  Sparkles
 } from 'lucide-react';
 import styles from './profile.module.scss';
 
@@ -20,7 +18,6 @@ const MOCK_PROJECTS = [
   { id: 2, title: 'Коттедж "Minimalist Modern"', area: '320 м²', material: 'Сланцевый камень', date: '28.08.2026' },
   { id: 3, title: 'Пентхаус "Skyline View"', area: '210 м²', material: 'Панорамное остекление', date: '15.08.2026' },
 ];
-
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState<'projects' | 'materials'>('projects');
@@ -37,23 +34,28 @@ export default function Profile() {
         <div className={styles.userInfo}>
           <div className={styles.avatarWrapper}>
             <div className={styles.avatar}>
-              <User size={32} color="#d4af37" />
+              <div className={styles.avatarInner}>АВ</div>
             </div>
             <span className={styles.badgeOnline} />
           </div>
           <div>
-            <div className={styles.roleTag}>PRO INVESTOR</div>
-            <h1>Александр Вершинин</h1>
+            <div className={styles.roleTag}>
+              <Sparkles size={11} />
+              <span>PRO INVESTOR</span>
+            </div>
+            <h1>
+              Александр <span className={styles.accentText}>Вершинин</span>
+            </h1>
             <p>a.vershinin@estate-corp.ru</p>
           </div>
         </div>
 
         <motion.button 
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           className={styles.btnCreate}
         >
-          <Plus size={18} />
+          <Plus size={16} />
           <span>Новый 3D проект</span>
         </motion.button>
       </motion.section>
@@ -67,7 +69,7 @@ export default function Profile() {
       >
         <div className={styles.statCard}>
           <div className={styles.iconBox}>
-            <Box size={20} color="#d4af37" />
+            <Box size={22} />
           </div>
           <div>
             <span className={styles.label}>Сохраненные проекты</span>
@@ -77,7 +79,7 @@ export default function Profile() {
 
         <div className={styles.statCard}>
           <div className={styles.iconBox}>
-            <Layers size={20} color="#d4af37" />
+            <Layers size={22} />
           </div>
           <div>
             <span className={styles.label}>Кастомные пресеты</span>
@@ -87,11 +89,11 @@ export default function Profile() {
 
         <div className={styles.statCard}>
           <div className={styles.iconBox}>
-            <ShieldCheck size={20} color="#d4af37" />
+            <ShieldCheck size={22} />
           </div>
           <div>
             <span className={styles.label}>Скидка на материалы</span>
-            <div className={styles.value}>7% VIP</div>
+            <div className={styles.value}>7% VIP Status</div>
           </div>
         </div>
       </motion.div>
@@ -120,7 +122,7 @@ export default function Profile() {
           </div>
 
           <button className={styles.btnFilter}>
-            <SlidersHorizontal size={16} />
+            <SlidersHorizontal size={14} />
             <span>Фильтры</span>
           </button>
         </div>
@@ -142,7 +144,7 @@ export default function Profile() {
                 >
                   <div className={styles.projectInfo}>
                     <div className={styles.projectIcon}>
-                      <Box size={20} color="#94a3b8" />
+                      <Box size={20} />
                     </div>
                     <div>
                       <h3>{item.title}</h3>
@@ -153,12 +155,11 @@ export default function Profile() {
                   <div className={styles.projectActions}>
                     <span className={styles.date}>{item.date}</span>
                     <motion.button 
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
+                      whileTap={{ scale: 0.95 }}
                       className={styles.btnOpen3D}
                     >
-                      <span>3D</span>
-                      <ArrowUpRight size={16} />
+                      <span>3D Визор</span>
+                      <ArrowUpRight size={14} />
                     </motion.button>
                   </div>
                 </motion.div>

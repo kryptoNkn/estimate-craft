@@ -1,28 +1,60 @@
-// components/Topbar/Topbar.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Box } from 'lucide-react'; // Lucide icon
-import { ChevronDownIcon } from '@heroicons/react/24/outline'; // Heroicon
+import { Box, ChevronDown } from 'lucide-react';
 import ProfilePopup from '../ProfilePopup/ProfilePopup';
 import styles from './Topbar.module.scss';
 
-export default function Topbar() {
+export default function Topbar(): React.JSX.Element {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className={styles.topbar}>
+    <header className={`${styles.topbarWrapper} ${isScrolled ? styles.scrolled : ''}`}>
       <Link href="/" className={styles.logo}>
-        <Box color="#cfa86e" size={28} />
-        <div>AURA <span>DEVELOPMENT</span></div>
+        <div className={styles.logoIcon}>
+          <Box size={18} />
+        </div>
+        <div className={styles.brandText}>
+          AURA <span>ARCH</span>
+        </div>
       </Link>
 
       <nav className={styles.nav}>
-        <Link href="/">Главная</Link>
-        <Link href="/catalog">Каталог объектов</Link>
-        <Link href="/constructor">3D Конструктор</Link>
+        <Link 
+          href="/" 
+          className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}
+        >
+          Главная
+        </Link>
+        <Link 
+          href="/catalog" 
+          className={`${styles.navLink} ${pathname === '/catalog' ? styles.active : ''}`}
+        >
+          Проекты
+        </Link>
+        <Link 
+          href="/about" 
+          className={`${styles.navLink} ${pathname === '/about' ? styles.active : ''}`}
+        >
+          О Бюро
+        </Link>
+        <Link href="/constructor" className={styles.constructorBadge}>
+          <div className={styles.liveDot} />
+          <span>3D Конструктор</span>
+        </Link>
       </nav>
 
       <div className={styles.profileWrapper}>
@@ -36,10 +68,12 @@ export default function Topbar() {
             <span className={styles.name}>Александр В.</span>
             <span className={styles.role}>Инвестор</span>
           </div>
-          <ChevronDownIcon style={{ width: 16, height: 16, color: '#9ca3af' }} />
+          <ChevronDown size={14} className={styles.chevron} />
         </motion.button>
 
-        <ProfilePopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+        {isPopupOpen && (
+          <ProfilePopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+        )}
       </div>
     </header>
   );
