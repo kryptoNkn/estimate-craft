@@ -1,0 +1,14 @@
+/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/deps/serde-a2850d46244ab359.d: /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs /Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/build/serde-408d09be6176c4ff/out/private.rs
+
+/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/deps/libserde-a2850d46244ab359.rlib: /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs /Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/build/serde-408d09be6176c4ff/out/private.rs
+
+/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/deps/libserde-a2850d46244ab359.rmeta: /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs /Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs /Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/build/serde-408d09be6176c4ff/out/private.rs
+
+/Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs:
+/Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs:
+/Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs:
+/Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs:
+/Users/kryptonkn/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs:
+/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/build/serde-408d09be6176c4ff/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/kryptonkn/Desktop/constructor-wm/backend/target/debug/build/serde-408d09be6176c4ff/out
