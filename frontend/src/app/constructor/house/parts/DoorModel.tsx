@@ -42,8 +42,8 @@ export function DoorModel({ isSelected = false, width = 1.1, height = 2.15 }: Do
       {/* Металлическая ручка */}
       <group position={[width / 2 - 0.18, -0.02, 0.08]}>
         {/* Основание */}
-        <mesh castShadow>
-          <cylinderGeometry args={[0.015, 0.015, 0.04, 16]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh castShadow rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.015, 0.015, 0.04, 16]} />
           <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
         </mesh>
         {/* Ручка-рычаг */}

@@ -248,6 +248,45 @@ $font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
       }
     }
   }
+
+  .authActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .loginLink {
+    padding: 10px 16px;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  .registerBtn {
+    padding: 10px 18px;
+    border-radius: $radius-pill;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: #f3e5ab;
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: rgba(212, 175, 55, 0.55);
+    }
+  }
 }
 
 

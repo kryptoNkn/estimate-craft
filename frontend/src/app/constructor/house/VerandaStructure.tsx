@@ -1,7 +1,16 @@
 'use client';
 
 import React from 'react';
-import { VerandaProps } from './VerandaStructure';
+
+export interface VerandaProps {
+  hasVeranda: boolean;
+  material: string;
+  fenceStyle: string;
+  isBaseClosed: boolean;
+  width: number;
+  length: number;
+  perimeterOffset?: number;
+}
 
 interface VerandaStructureProps {
   veranda: VerandaProps;

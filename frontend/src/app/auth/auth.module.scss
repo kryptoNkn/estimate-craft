@@ -1,0 +1,129 @@
+@import '../../styles/variables.scss';
+
+.page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 48px;
+  background:
+    radial-gradient(circle at top, rgba(212, 175, 55, 0.08), transparent 40%),
+    $bg-dark;
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  border-radius: $radius-card;
+  background: rgba(19, 22, 28, 0.92);
+  border: 1px solid $border-light;
+  box-shadow: $shadow-popup;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $accent-gold;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-family: $font-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.subtitle {
+  margin: 0 0 32px;
+  color: $text-secondary;
+  line-height: 1.6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: $radius-md;
+    border: 1px solid $border-color;
+    background: rgba(255, 255, 255, 0.03);
+    color: $text-primary;
+    outline: none;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &:focus {
+      border-color: $border-gold;
+      box-shadow: $shadow-glow;
+    }
+  }
+}
+
+.error {
+  padding: 12px 14px;
+  border-radius: $radius-md;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #fecaca;
+  font-size: 0.92rem;
+}
+
+.submit {
+  margin-top: 8px;
+  padding: 14px 18px;
+  border: none;
+  border-radius: $radius-pill;
+  background: linear-gradient(135deg, #d4af37, #b8941f);
+  color: #111;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform $transition-fast, opacity $transition-fast;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  color: $text-secondary;
+
+  a {
+    color: $accent-gold-light;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

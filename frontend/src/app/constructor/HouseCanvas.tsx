@@ -125,8 +125,8 @@ function RealisticDoorModel({ isSelected }: { isSelected: boolean }) {
 
       {/* Дверная ручка */}
       <group position={[width / 2 - 0.18, -0.02, 0.08]}>
-        <mesh castShadow>
-          <cylinderGeometry args={[0.015, 0.015, 0.04, 16]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh castShadow rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.015, 0.015, 0.04, 16]} />
           <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
         </mesh>
         <mesh position={[-0.05, 0, 0.02]} castShadow>
@@ -266,7 +266,7 @@ export default function HouseCanvas({
         garageCars
       );
 
-      setVeranda((prev) => ({
+      setVeranda((prev: VerandaProps) => ({
         ...prev,
         perimeterOffset: newOffset
       }));

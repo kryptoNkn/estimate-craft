@@ -4,6 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Building, Settings, LogOut, ChevronRight, Sparkles } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { displayName, formatRole, getInitials } from '@/lib/auth-storage';
 import styles from './ProfilePopup.module.scss';
 
 interface ProfilePopupProps {
@@ -11,7 +13,16 @@ interface ProfilePopupProps {
   onClose: () => void;
 }
 
-export default function ProfilePopup({ isOpen, onClose }: ProfilePopupProps): React.JSX.Element | null {
+export default function ProfilePopup({
+  isOpen,
+  onClose,
+}: ProfilePopupProps): React.JSX.Element | null {
+  const { user, logout } = useAuth();
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -24,14 +35,14 @@ export default function ProfilePopup({ isOpen, onClose }: ProfilePopupProps): Re
         >
           <div className={styles.header}>
             <div className={styles.avatarLarge}>
-              <div className={styles.avatarInner}>АВ</div>
+              <div className={styles.avatarInner}>{getInitials(user.email)}</div>
             </div>
             <div className={styles.userMeta}>
-              <span className={styles.userName}>Александр В.</span>
-              <span className={styles.userEmail}>a.vershinin@estate-corp.ru</span>
+              <span className={styles.userName}>{displayName(user.email)}</span>
+              <span className={styles.userEmail}>{user.email}</span>
               <div className={styles.badgeRole}>
                 <Sparkles size={10} />
-                <span>Премиум Инвестор</span>
+                <span>{formatRole(user.role)}</span>
               </div>
             </div>
           </div>
@@ -45,15 +56,15 @@ export default function ProfilePopup({ isOpen, onClose }: ProfilePopupProps): Re
               <ChevronRight size={14} className={styles.arrow} />
             </Link>
 
-            <Link href="/profile/projects" className={styles.item} onClick={onClose}>
+            <Link href="/profile" className={styles.item} onClick={onClose}>
               <div className={styles.itemLeft}>
                 <Building size={15} />
                 <span>Сохраненные 3D проекты</span>
               </div>
-              <span className={styles.countBadge}>3</span>
+              <span className={styles.countBadge}>0</span>
             </Link>
 
-            <Link href="/profile/settings" className={styles.item} onClick={onClose}>
+            <Link href="/profile" className={styles.item} onClick={onClose}>
               <div className={styles.itemLeft}>
                 <Settings size={15} />
                 <span>Настройки аккаунта</span>
@@ -61,10 +72,13 @@ export default function ProfilePopup({ isOpen, onClose }: ProfilePopupProps): Re
               <ChevronRight size={14} className={styles.arrow} />
             </Link>
 
-            <button 
-              type="button" 
-              className={`${styles.item} ${styles.danger}`} 
-              onClick={onClose}
+            <button
+              type="button"
+              className={`${styles.item} ${styles.danger}`}
+              onClick={() => {
+                onClose();
+                logout();
+              }}
             >
               <div className={styles.itemLeft}>
                 <LogOut size={15} />

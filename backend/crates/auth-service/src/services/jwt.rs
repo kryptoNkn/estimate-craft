@@ -1,5 +1,5 @@
 use chrono::{Duration, Utc};
-use jsonwebtoken::{encode, EncodingKey, Header};
+use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -8,12 +8,12 @@ use crate::{
 };
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Claims {
-    sub: String,
-    email: String,
-    role: String,
-    exp: usize,
-    iat: usize,
+pub struct Claims {
+    pub sub: String,
+    pub email: String,
+    pub role: String,
+    pub exp: usize,
+    pub iat: usize,
 }
 
 pub fn create_token(
@@ -40,5 +40,19 @@ pub fn create_token(
     .map_err(|err| {
         tracing::error!(%err, "failed to create jwt");
         AppError::Internal
+    })
+}
+
+pub fn verify_token(token: &str, secret: &str) -> Result<Claims, AppError> {
+    decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(secret.as_bytes()),
+        &Validation::default(),
+    )
+    .map(|data| data.claims)
+    .map_err(|err| {
+        tracing::warn!(%err, "invalid jwt");
+        AppError::Unauthorized("invalid or expired token".into())
+
     })
 }

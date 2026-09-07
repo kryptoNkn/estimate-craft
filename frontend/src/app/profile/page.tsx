@@ -1,26 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Box, 
-  Layers, 
-  ShieldCheck, 
-  Plus, 
-  ArrowUpRight, 
+import {
+  Box,
+  Layers,
+  ShieldCheck,
+  Plus,
+  ArrowUpRight,
   SlidersHorizontal,
   Sparkles
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { displayName, formatRole, getInitials } from '@/lib/auth-storage';
 import styles from './profile.module.scss';
 
-const MOCK_PROJECTS = [
-  { id: 1, title: 'Вилла "AURA Residence"', area: '480 м²', material: 'Травертин & Кедр', date: '02.09.2026' },
-  { id: 2, title: 'Коттедж "Minimalist Modern"', area: '320 м²', material: 'Сланцевый камень', date: '28.08.2026' },
-  { id: 3, title: 'Пентхаус "Skyline View"', area: '210 м²', material: 'Панорамное остекление', date: '15.08.2026' },
-];
+const MOCK_PROJECTS: Array<{
+  id: number;
+  title: string;
+  area: string;
+  material: string;
+  date: string;
+}> = [];
 
 export default function Profile() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<'projects' | 'materials'>('projects');
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace('/auth/login');
+    }
+  }, [loading, user, router]);
+
+  if (loading || !user) {
+    return null;
+  }
+
+  const profileName = displayName(user.email).replace('.', '');
 
   return (
     <div className={styles.container}>
@@ -34,30 +54,32 @@ export default function Profile() {
         <div className={styles.userInfo}>
           <div className={styles.avatarWrapper}>
             <div className={styles.avatar}>
-              <div className={styles.avatarInner}>АВ</div>
+              <div className={styles.avatarInner}>{getInitials(user.email)}</div>
             </div>
             <span className={styles.badgeOnline} />
           </div>
           <div>
             <div className={styles.roleTag}>
               <Sparkles size={11} />
-              <span>PRO INVESTOR</span>
+              <span>{formatRole(user.role).toUpperCase()}</span>
             </div>
             <h1>
-              Александр <span className={styles.accentText}>Вершинин</span>
+              {profileName}
             </h1>
-            <p>a.vershinin@estate-corp.ru</p>
+            <p>{user.email}</p>
           </div>
         </div>
 
-        <motion.button 
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className={styles.btnCreate}
-        >
-          <Plus size={16} />
-          <span>Новый 3D проект</span>
-        </motion.button>
+        <Link href="/constructor">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={styles.btnCreate}
+          >
+            <Plus size={16} />
+            <span>Новый 3D проект</span>
+          </motion.button>
+        </Link>
       </motion.section>
 
       {/* Карточки метрик */}
@@ -73,7 +95,7 @@ export default function Profile() {
           </div>
           <div>
             <span className={styles.label}>Сохраненные проекты</span>
-            <div className={styles.value}>3 Объекта</div>
+            <div className={styles.value}>0 Объектов</div>
           </div>
         </div>
 
@@ -136,7 +158,13 @@ export default function Profile() {
               exit={{ opacity: 0 }}
               className={styles.projectList}
             >
-              {MOCK_PROJECTS.map((item) => (
+              {MOCK_PROJECTS.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <p>У вас пока нет сохраненных 3D-проектов.</p>
+                  <Link href="/constructor">Открыть конструктор</Link>
+                </div>
+              ) : (
+                MOCK_PROJECTS.map((item) => (
                 <motion.div 
                   key={item.id}
                   whileHover={{ x: 6 }}
@@ -163,7 +191,8 @@ export default function Profile() {
                     </motion.button>
                   </div>
                 </motion.div>
-              ))}
+                ))
+              )}
             </motion.div>
           ) : (
             <motion.div 

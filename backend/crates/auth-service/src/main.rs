@@ -7,6 +7,7 @@ mod models;
 mod repositories;
 mod services;
 mod routes;
+mod extractors;
 
 use crate::{config::Config, state::AppState};
 
@@ -45,6 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         db,
         jwt_secret: config.jwt_secret,
         jwt_expires_in_secs: config.jwt_expires_in_secs,
+        cors_allowed_origin: config.cors_allowed_origin,
     };
 
     let listener = TcpListener::bind(address).await?;

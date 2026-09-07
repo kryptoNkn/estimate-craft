@@ -2,11 +2,12 @@ use axum::{
     Json,
     extract::State,
     http::StatusCode,
-    routing::post,
+    routing::{get, post},
     Router,
 };
 use serde::{Deserialize, Serialize};
 use validator::Validate;
+use crate::extractors::auth::AuthUser;
 
 use crate::{
     error::AppError,
@@ -47,6 +48,7 @@ pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/register", post(register))
         .route("/login", post(login))
+        .route("/me", get(me))
 }
 
 async fn register(
@@ -92,4 +94,15 @@ async fn login(
         expires_in: state.jwt_expires_in_secs,
         user: user.into_response(),
     }))
+}
+
+async fn me(
+    State(state): State<AppState>,
+    auth: AuthUser,
+) -> Result<Json<UserResponse>, AppError> {
+    let user = UserRepository::find_by_id(&state.db, auth.user_id)
+        .await?
+        .ok_or_else(|| AppError::Unauthorized("user not found".into()))?;
+
+    Ok(Json(user.into_response()))
 }

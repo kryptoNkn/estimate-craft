@@ -7,6 +7,7 @@ pub struct Config {
     pub database_url: String,
     pub jwt_secret: String,
     pub jwt_expires_in_secs: u64,
+    pub cors_allowed_origin: String,
 }
 
 impl Config {
@@ -28,12 +29,16 @@ impl Config {
             .parse()
             .expect("JWT_EXPIRES_IN_SECS must be a valid u64");
 
+            let cors_allowed_origin = env::var("CORS_ALLOWED_ORIGIN")
+            .unwrap_or_else(|_| "http://localhost:3000".to_string());
+
         Ok(Self {
             server_host,
             server_port,
             database_url,
             jwt_secret,
             jwt_expires_in_secs,
+            cors_allowed_origin,
         })
     }
 }
