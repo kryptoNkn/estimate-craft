@@ -1,0 +1,188 @@
+@import '../../styles/variables.scss';
+
+.openingsPanel {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 30;
+  width: 260px;
+  
+  background: rgba(14, 16, 21, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 14px;
+  color: #E2E8F0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  touch-action: none;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .headerTitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #F2F0E8;
+      letter-spacing: 0.12em;
+    }
+
+    .dragHandle {
+      color: #525B68;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+
+      &:active {
+        cursor: grabbing;
+        color: #F2F0E8;
+      }
+
+      &:hover {
+        color: #8A93A0;
+      }
+    }
+  }
+
+  .buttonGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+
+    .addBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #D2D0C8;
+      background: #08090C;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #14171F;
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #F2F0E8;
+      }
+    }
+  }
+
+  .fieldBlock {
+    margin-bottom: 12px;
+
+    label {
+      display: block;
+      font-size: 0.58rem;
+      color: #606B7A;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    /* Сегментный выбор этажа вместо select */
+    .floorSegmentControl {
+      display: flex;
+      background: #08090C;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 3px;
+      border-radius: 6px;
+      gap: 4px;
+
+      .floorSegmentBtn {
+        flex: 1;
+        text-align: center;
+        background: transparent;
+        border: none;
+        color: #717D8D;
+        padding: 6px 0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.64rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: #F2F0E8;
+          background: rgba(255, 255, 255, 0.03);
+        }
+
+        &.active {
+          background: #F2F0E8;
+          color: #08090C;
+        }
+      }
+    }
+  }
+
+  .itemList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 140px;
+    overflow-y: auto;
+    padding-right: 2px;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .itemCard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #08090C;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      padding: 8px 10px;
+
+      .itemInfo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.66rem;
+        font-weight: 600;
+        color: #D2D0C8;
+      }
+
+      .deleteBtn {
+        color: #606B7A;
+        cursor: pointer;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #E54D42;
+        }
+      }
+    }
+  }
+
+  .dragHint {
+    margin-top: 10px;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: #525B68;
+    text-align: center;
+  }
+}

@@ -1,0 +1,899 @@
+@import '../styles/variables.scss';
+
+/* Высококонтрастная редакционная парная типографика */
+$font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+$font-luxury-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+
+/* -------------------------------------------------------------
+   ОСНОВНОЙ КОНТЕЙНЕР СТРАНИЦЫ
+------------------------------------------------------------- */
+.pageContainer {
+  position: relative;
+  background: #050608;
+  color: #E2E8F0;
+  font-family: $font-luxury-sans;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* -------------------------------------------------------------
+   1. HERO СЕКЦИЯ (ГЛАВНЫЙ ЭКРАН С ВИДЕО И МАКСИМАЛЬНЫМ LUXURY-АКЦЕНТОМ)
+------------------------------------------------------------- */
+.heroSection {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 140px 48px 100px;
+
+  /* Видеофон и кинематографичное затемнение */
+  .videoBgWrapper {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    background: #050608;
+
+    .videoBg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.5;
+      filter: saturate(0.85) contrast(1.2);
+    }
+
+    .videoOverlay {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at center, rgba(5, 6, 8, 0.25) 0%, rgba(5, 6, 8, 0.92) 100%),
+        linear-gradient(to bottom, rgba(5, 6, 8, 0.3) 0%, rgba(5, 6, 8, 0.98) 100%);
+    }
+  }
+
+  /* Архитектурная тонкая сетка на фоне */
+  .bgGrid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Фоновый полупрозрачный водяной знак */
+  .bigWatermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: $font-luxury-sans;
+    font-size: 25vw;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.012);
+    letter-spacing: 0.18em;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    z-index: 1;
+    text-transform: uppercase;
+  }
+
+  .heroContent {
+    position: relative;
+    z-index: 5;
+    max-width: 1380px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Бренд-логотип по аналогии с «AURA ARCH» */
+  .brandTitleText {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+
+    .logoIcon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .brandText {
+      font-family: $font-luxury-sans;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+
+      span {
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.45);
+        letter-spacing: 0.38em;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  /* Главный дерзкий Luxury-заголовок (ALL CAPS + Градиентный Курсив) */
+  .heroTitle {
+    font-family: $font-luxury-serif;
+    font-size: clamp(3.2rem, 7.5vw, 7.2rem);
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #FFFFFF;
+    margin-bottom: 32px;
+    text-shadow: 0 15px 50px rgba(0, 0, 0, 0.95);
+
+    .accent {
+      font-family: $font-luxury-serif;
+      font-style: italic;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0em;
+      background: linear-gradient(180deg, #FFFFFF 30%, rgba(255, 255, 255, 0.5) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding-right: 12px;
+      display: inline-block;
+    }
+  }
+
+  /* Монументальный подзаголовок с глубокой разрядкой */
+  .heroSub {
+    font-family: $font-luxury-sans;
+    font-size: clamp(0.85rem, 1.1vw, 1rem);
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+    max-width: 720px;
+    margin-bottom: 56px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Премиум-кнопки */
+  .heroActions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .btnPrimary {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 14px 12px 36px;
+      border-radius: 100px;
+      background: #FFFFFF;
+      color: #050608;
+      font-family: $font-luxury-sans;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
+
+      .btnIconCircle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #050608;
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.4s ease;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 50px rgba(255, 255, 255, 0.3);
+
+        .btnIconCircle {
+          transform: rotate(45deg);
+        }
+      }
+    }
+
+    .btnSecondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 38px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      color: #FFFFFF;
+      font-family: $font-luxury-sans;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.4s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-3px);
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------
+   2. МЕТРИКИ И ПОКАЗАТЕЛИ (СТРОГАЯ АРХИТЕКТУРНАЯ СЕТКА)
+------------------------------------------------------------- */
+.metricsBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-y: 1px solid rgba(255, 255, 255, 0.08);
+  max-width: 1300px;
+  margin: 0 auto 120px;
+
+  .metricBox {
+    background: #050608;
+    padding: 44px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: #0A0C10;
+    }
+
+    .num {
+      font-family: $font-luxury-serif;
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .label {
+      font-family: $font-luxury-sans;
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+  }
+}
+
+/* -------------------------------------------------------------
+   3. КАТАЛОГ ПРОЕКТОВ (РЕДАКЦИОННЫЕ КАРТОЧКИ ОБЪЕКТОВ)
+------------------------------------------------------------- */
+.projectsSection {
+  padding: 0 48px 140px;
+  max-width: 1380px;
+  margin: 0 auto;
+
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+
+    .titleGroup {
+      .tag {
+        font-family: $font-luxury-sans;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      h2 {
+        font-family: $font-luxury-serif;
+        font-size: 3rem;
+        font-weight: 600;
+        color: #FFFFFF;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+    }
+
+    .catalogLink {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      font-family: $font-luxury-sans;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #FFFFFF;
+      }
+    }
+  }
+
+  .projectsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+
+    .projectCard {
+      position: relative;
+      background: rgba(14, 16, 21, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .cardVisual {
+        height: 340px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(5, 6, 8, 0.1) 0%, rgba(5, 6, 8, 0.9) 100%);
+        }
+
+        .badgeArea {
+          position: relative;
+          z-index: 2;
+          background: rgba(5, 6, 8, 0.8);
+          backdrop-filter: blur(12px);
+          padding: 8px 16px;
+          border-radius: 100px;
+          font-family: $font-luxury-sans;
+          font-size: 0.65rem;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+      }
+
+      .cardInfo {
+        padding: 32px;
+
+        .pName {
+          font-family: $font-luxury-serif;
+          font-size: 1.8rem;
+          font-weight: 600;
+          color: #FFFFFF;
+          margin-bottom: 10px;
+          letter-spacing: 0.02em;
+        }
+
+        .pMeta {
+          display: flex;
+          gap: 24px;
+          font-family: $font-luxury-sans;
+          font-size: 0.72rem;
+          color: rgba(255, 255, 255, 0.45);
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          margin-bottom: 28px;
+        }
+
+        .pPriceRow {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 24px;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+          .price {
+            font-family: $font-luxury-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #FFFFFF;
+          }
+
+          .openBtn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+          }
+        }
+      }
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+        .openBtn {
+          background: #FFFFFF;
+          color: #050608;
+        }
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------
+   4. ПОШАГОВЫЙ ПРОЦЕСС (WORKFLOW)
+------------------------------------------------------------- */
+.workflowSection {
+  padding: 0 48px 160px;
+  max-width: 1380px;
+  margin: 0 auto;
+
+  .sectionHeader {
+    margin-bottom: 72px;
+
+    .tag {
+      font-family: $font-luxury-sans;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    h2 {
+      font-family: $font-luxury-serif;
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      font-weight: 600;
+      color: #FFFFFF;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+  }
+
+  /* Редакционный вертикальный список со сквозной направляющей линией */
+  .flowList {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    /* Тонкая направляющая линия слева */
+    &::before {
+      content: '';
+      position: absolute;
+      left: 120px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.2) 100%
+      );
+      z-index: 1;
+    }
+
+    .flowStep {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 120px 1fr 1.2fr;
+      align-items: center;
+      gap: 48px;
+      padding: 48px 36px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 16px;
+      cursor: pointer;
+
+      /* Большой гигантский номер шага в стиле премиум-глянца */
+      .stepNum {
+        font-family: $font-luxury-serif;
+        font-size: 3.5rem;
+        font-weight: 400;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.25);
+        line-height: 1;
+        transition: all 0.5s ease;
+      }
+
+      /* Заголовок этапа */
+      .stepTitle {
+        font-family: $font-luxury-serif;
+        font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+        font-weight: 600;
+        color: #FFFFFF;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        transition: transform 0.4s ease;
+
+        .stepTag {
+          display: block;
+          font-family: $font-luxury-sans;
+          font-size: 0.6rem;
+          font-weight: 700;
+          letter-spacing: 0.25em;
+          color: rgba(255, 255, 255, 0.35);
+          margin-bottom: 8px;
+        }
+      }
+
+      /* Описание этапа */
+      .stepText {
+        font-family: $font-luxury-sans;
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.75;
+        font-weight: 300;
+        transition: color 0.4s ease;
+      }
+
+      /* Интерактивные эффекты при наведении */
+      &:hover {
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom-color: rgba(255, 255, 255, 0.2);
+
+        .stepNum {
+          color: #FFFFFF;
+          transform: translateX(8px);
+          text-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .stepTitle {
+          transform: translateX(12px);
+        }
+
+        .stepText {
+          color: rgba(255, 255, 255, 0.85);
+        }
+      }
+    }
+  }
+}
+
+/* Адаптив под мобильные устройства */
+@media (max-width: 900px) {
+  .workflowSection {
+    .flowList {
+      &::before {
+        display: none;
+      }
+
+      .flowStep {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 32px 16px;
+
+        .stepNum {
+          font-size: 2.5rem;
+        }
+
+        &:hover {
+          .stepNum, .stepTitle {
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------
+   5. ФОРМА ЗАЯВКИ / КОНСУЛЬТАЦИИ
+------------------------------------------------------------- */
+.consultSection {
+  position: relative;
+  padding: 120px 48px 180px;
+  max-width: 1380px;
+  margin: 0 auto;
+  overflow: hidden;
+
+  /* Декоративная тонкая сетка на фоне */
+  .consultGridBg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Мягкий световой акцент по центру */
+  .consultGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.035) 0%, transparent 70%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .consultContainer {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    background: rgba(10, 12, 16, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px);
+    border-radius: 24px;
+    padding: 80px 72px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+
+    /* Левый блок: Драматическая типографика */
+    .consultHeader {
+      .tag {
+        font-family: $font-luxury-sans;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      h3 {
+        font-family: $font-luxury-serif;
+        font-size: clamp(2.4rem, 3.8vw, 3.6rem);
+        font-weight: 600;
+        line-height: 1.1;
+        color: #FFFFFF;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin-bottom: 24px;
+
+        .accent {
+          font-style: italic;
+          font-weight: 400;
+          text-transform: none;
+          letter-spacing: 0em;
+          background: linear-gradient(180deg, #FFFFFF 30%, rgba(255, 255, 255, 0.5) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          display: inline-block;
+          padding-right: 8px;
+        }
+      }
+
+      p {
+        font-family: $font-luxury-sans;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.85rem;
+        line-height: 1.8;
+        font-weight: 300;
+        letter-spacing: 0.05em;
+        max-width: 480px;
+      }
+    }
+
+    /* Правый блок: Архитектурные премиум-инпуты */
+    .consultForm {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+
+      .inputGroup {
+        position: relative;
+
+        input {
+          width: 100%;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          padding: 16px 0;
+          color: #FFFFFF;
+          font-family: $font-luxury-sans;
+          font-size: 0.95rem;
+          font-weight: 400;
+          letter-spacing: 0.05em;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 500;
+          }
+
+          &:focus {
+            outline: none;
+            border-bottom-color: #FFFFFF;
+            padding-left: 8px;
+          }
+        }
+
+        /* Тонкий неоновый подсвечивающий штрих при фокусе */
+        .lineFocus {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0%;
+          height: 1px;
+          background: #FFFFFF;
+          transition: width 0.4s ease;
+        }
+
+        input:focus + .lineFocus {
+          width: 100%;
+        }
+      }
+
+      /* Магнитная кнопка в стиле Hero */
+      .submitBtn {
+        margin-top: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 14px 16px 14px 36px;
+        border-radius: 100px;
+        background: #FFFFFF;
+        color: #050608;
+        font-family: $font-luxury-sans;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 10px 40px rgba(255, 255, 255, 0.12);
+
+        .btnIconCircle {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #050608;
+          color: #FFFFFF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.4s ease;
+        }
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 20px 50px rgba(255, 255, 255, 0.25);
+
+          .btnIconCircle {
+            transform: rotate(45deg);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1024px) {
+  .consultSection {
+    padding: 80px 24px 120px;
+
+    .consultContainer {
+      grid-template-columns: 1fr;
+      gap: 48px;
+      padding: 48px 32px;
+    }
+  }
+}
+
+/* -------------------------------------------------------------
+   6. АДАПТИВНОСТЬ (MOBILE & TABLET)
+------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .heroSection {
+    padding: 120px 24px 80px;
+
+    .heroTitle {
+      font-size: clamp(2.8rem, 10vw, 4.8rem);
+    }
+  }
+
+  .metricsBar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .projectsSection {
+    padding: 0 24px 100px;
+
+    .projectsGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .workflowSection {
+    padding: 0 24px 100px;
+
+    .flowGrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .heroSection {
+    .brandTitleText {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .heroActions {
+      flex-direction: column;
+      width: 100%;
+
+      .btnPrimary, .btnSecondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .metricsBar {
+    grid-template-columns: 1fr;
+  }
+
+  .workflowSection .flowGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .consultSection {
+    padding: 0 24px 100px;
+
+    .consultBox {
+      padding: 40px 24px;
+
+      .formGrid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}

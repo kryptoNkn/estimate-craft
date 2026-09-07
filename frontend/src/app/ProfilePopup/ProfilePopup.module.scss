@@ -1,0 +1,204 @@
+@import '../../styles/variables.scss';
+
+$font-luxury-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+
+.popup {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  width: 320px;
+  background: rgba(8, 10, 14, 0.88);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75),
+              0 0 1px rgba(255, 255, 255, 0.15);
+  padding: 24px;
+  z-index: 1000;
+  transform-origin: top right;
+  overflow: hidden;
+
+  /* Декоративная тонкая сетка и свечение */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+    /* Аватар с окантовкой */
+    .avatarLarge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.03) 100%);
+      padding: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      .avatarInner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #090B0E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: $font-luxury-sans;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        letter-spacing: 0.08em;
+      }
+    }
+
+    .userMeta {
+      display: flex;
+      flex-direction: column;
+
+      .userName {
+        font-family: $font-luxury-sans;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #FFFFFF;
+        letter-spacing: 0.03em;
+        line-height: 1.2;
+      }
+
+      .userEmail {
+        font-family: $font-luxury-sans;
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 4px;
+        letter-spacing: 0.02em;
+      }
+
+      .badgeRole {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        font-family: $font-luxury-sans;
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #FFFFFF;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 3px 10px;
+        border-radius: 100px;
+        width: fit-content;
+
+        svg {
+          color: #10B981;
+        }
+      }
+    }
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-family: $font-luxury-sans;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .itemLeft {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        svg {
+          color: rgba(255, 255, 255, 0.4);
+          transition: color 0.3s ease;
+        }
+      }
+
+      .countBadge {
+        font-family: $font-luxury-sans;
+        font-size: 0.62rem;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.1);
+        color: #FFFFFF;
+        padding: 2px 8px;
+        border-radius: 100px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .arrow {
+        color: rgba(255, 255, 255, 0.3);
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #FFFFFF;
+        transform: translateX(3px);
+
+        .itemLeft svg {
+          color: #FFFFFF;
+        }
+
+        .arrow {
+          color: #FFFFFF;
+          transform: translateX(2px);
+        }
+      }
+
+      &.danger {
+        color: #F87171;
+        margin-top: 10px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+
+        .itemLeft svg {
+          color: #F87171;
+        }
+
+        &:hover {
+          background: rgba(239, 68, 68, 0.1);
+          border-color: rgba(239, 68, 68, 0.2);
+          color: #EF4444;
+
+          .itemLeft svg {
+            color: #EF4444;
+          }
+        }
+      }
+    }
+  }
+}

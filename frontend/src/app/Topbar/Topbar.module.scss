@@ -1,0 +1,279 @@
+@import '../../styles/variables.scss';
+
+/* Высококонтрастная редакционная типографика */
+$font-luxury-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+
+.topbarWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  background: rgba(5, 6, 8, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1000;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.scrolled {
+    height: 68px;
+    background: rgba(5, 6, 8, 0.92);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ЛОГОТИП БЮРО */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+
+    .logoIcon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .brandText {
+      font-family: $font-luxury-sans;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+
+      span {
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 300;
+        letter-spacing: 0.38em;
+        margin-left: 6px;
+      }
+    }
+
+    &:hover .logoIcon {
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.03);
+    }
+  }
+
+  /* НАВИГАЦИЯ */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+
+    .navLink {
+      position: relative;
+      font-family: $font-luxury-sans;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      padding: 6px 0;
+      transition: color 0.3s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 1px;
+        background: #FFFFFF;
+        transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      &:hover {
+        color: #FFFFFF;
+
+        &::after {
+          width: 100%;
+        }
+      }
+
+      &.active {
+        color: #FFFFFF;
+        
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+
+    /* БЭДЖ КОНСТРУКТОРА */
+    .constructorBadge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 100px;
+      color: #FFFFFF;
+      font-family: $font-luxury-sans;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.35s ease;
+      backdrop-filter: blur(12px);
+
+      .liveDot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10B981;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+      }
+
+      &:hover {
+        background: #FFFFFF;
+        color: #050608;
+        border-color: #FFFFFF;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+
+        .liveDot {
+          background: #050608;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .profileWrapper {
+    position: relative;
+  }
+
+  /* РЕДАКЦИОННАЯ ПЛАНКА ПРОФИЛЯ (HAUTE COUTURE STYLE) */
+  .profileBtn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    padding: 6px 16px 6px 6px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+
+    /* Аватар с градиентной тонкой рамкой */
+    .avatar {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.03) 100%);
+      padding: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &::before {
+        content: 'АВ';
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #090B0E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: $font-luxury-sans;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        letter-spacing: 0.08em;
+      }
+    }
+
+    .userInfo {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      gap: 2px;
+
+      .name {
+        font-family: $font-luxury-sans;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #FFFFFF;
+        letter-spacing: 0.04em;
+        line-height: 1.2;
+      }
+      
+      .role {
+        font-family: $font-luxury-sans;
+        font-size: 0.58rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+    }
+
+    .chevron {
+      color: rgba(255, 255, 255, 0.4);
+      margin-left: 2px;
+      transition: all 0.3s ease;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+
+      .chevron {
+        color: #FFFFFF;
+      }
+    }
+  }
+}
+
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 900px) {
+  .topbarWrapper {
+    padding: 0 24px;
+
+    .nav {
+      display: none;
+    }
+  }
+}
+.avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #090B0E;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-luxury-sans;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.08em;
+}
