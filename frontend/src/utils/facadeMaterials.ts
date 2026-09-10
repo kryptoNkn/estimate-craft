@@ -37,11 +37,13 @@ export function createFacadeTexture(
   const size = 1024;
   const canvas = document.createElement('canvas');
   const normalCanvas = document.createElement('canvas');
-  canvas.width = normalCanvas.width = size;
-  canvas.height = normalCanvas.height = size;
+  const roughCanvas = document.createElement('canvas');
+  canvas.width = normalCanvas.width = roughCanvas.width = size;
+  canvas.height = normalCanvas.height = roughCanvas.height = size;
 
   const ctx = canvas.getContext('2d')!;
   const normCtx = normalCanvas.getContext('2d')!;
+  const roughCtx = roughCanvas.getContext('2d')!;
 
   const mainLum = getLuminance(primaryColor);
   const isVeryDark = mainLum < 45;
@@ -55,8 +57,10 @@ export function createFacadeTexture(
 
   normCtx.fillStyle = 'rgb(128, 128, 255)';
   normCtx.fillRect(0, 0, size, size);
+  roughCtx.fillStyle = '#b8b8b8';
+  roughCtx.fillRect(0, 0, size, size);
 
-  const drawBump = (x: number, y: number, w: number, h: number) => {
+  const drawBump = (x: number, y: number, w: number, h: number, roughness = 0.55) => {
     normCtx.fillStyle = 'rgb(255, 128, 128)';
     normCtx.fillRect(x, y, 3, h);
     normCtx.fillStyle = 'rgb(0, 128, 128)';
@@ -65,6 +69,10 @@ export function createFacadeTexture(
     normCtx.fillRect(x, y, w, 3);
     normCtx.fillStyle = 'rgb(128, 0, 128)';
     normCtx.fillRect(x, y + h - 3, w, 3);
+
+    const roughVal = Math.round((1 - roughness) * 255);
+    roughCtx.fillStyle = `rgb(${roughVal}, ${roughVal}, ${roughVal})`;
+    roughCtx.fillRect(x, y, w, h);
   };
 
   // Гарантированный видимый контраст акцентных кирпичей
@@ -113,20 +121,52 @@ export function createFacadeTexture(
       ctx.fillRect(0, y, size, rowH - 4);
       drawBump(0, y, size, rowH - 4);
     }
+  } else if (type === 'wood' || type === 'vertical') {
+    const plankW = 52;
+    for (let x = 0; x < size; x += plankW) {
+      const randVal = pseudoRandom(x, 17);
+      ctx.fillStyle = blendColors(primaryColor, activeSecondary, randVal * 0.22);
+      ctx.fillRect(x + 2, 0, plankW - 5, size);
+      drawBump(x + 2, 0, plankW - 5, size);
+    }
+  } else if (type === 'stucco') {
+    for (let y = 0; y < size; y += 24) {
+      for (let x = 0; x < size; x += 24) {
+        const randVal = pseudoRandom(x, y);
+        ctx.fillStyle = blendColors(primaryColor, activeSecondary, randVal * 0.12);
+        ctx.fillRect(x, y, 24, 24);
+        const roughVal = Math.round((0.78 + randVal * 0.12) * 255);
+        roughCtx.fillStyle = `rgb(${roughVal}, ${roughVal}, ${roughVal})`;
+        roughCtx.fillRect(x, y, 24, 24);
+      }
+    }
   } else {
     ctx.fillStyle = primaryColor;
     ctx.fillRect(0, 0, size, size);
+    roughCtx.fillStyle = '#a8a8a8';
+    roughCtx.fillRect(0, 0, size, size);
   }
 
   const map = new THREE.CanvasTexture(canvas);
   map.wrapS = map.wrapT = THREE.RepeatWrapping;
-  map.repeat.set(1.5, 1.5);
+  map.repeat.set(1, 1);
+  map.anisotropy = 8;
+  // Canvas отдаёт данные в sRGB. Без этой пометки three трактует их как
+  // линейные и выводит фасад заметно светлее выбранного цвета.
+  map.colorSpace = THREE.SRGBColorSpace;
   map.needsUpdate = true;
 
   const normalMap = new THREE.CanvasTexture(normalCanvas);
   normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
-  normalMap.repeat.set(1.5, 1.5);
+  normalMap.repeat.set(1, 1);
+  normalMap.colorSpace = THREE.NoColorSpace;
   normalMap.needsUpdate = true;
 
-  return { map, normalMap };
+  const roughnessMap = new THREE.CanvasTexture(roughCanvas);
+  roughnessMap.wrapS = roughnessMap.wrapT = THREE.RepeatWrapping;
+  roughnessMap.repeat.set(1, 1);
+  roughnessMap.colorSpace = THREE.NoColorSpace;
+  roughnessMap.needsUpdate = true;
+
+  return { map, normalMap, roughnessMap };
 }

@@ -1,3 +1,7 @@
+//! Единый тип ошибок API и превращение их в HTTP-ответы.
+//! Хендлеры возвращают `AppError`, клиент видит JSON `{ "error": "..." }`.
+//! В лог — коды/факт ошибки, не пароли и не connection string.
+
 use axum::{
     Json,
     http::StatusCode,
@@ -49,9 +53,13 @@ impl From<sqlx::Error> for AppError {
             if db_err.code() == Some(Cow::Borrowed("23505")) {
                 return Self::Conflict("email already registered".into());
             }
+            tracing::error!(
+                code = ?db_err.code().as_deref(),
+                "database error"
+            );
+            return Self::Internal;
         }
-
-        tracing::error!(%err, "database error");
+        tracing::error!("database error");
         Self::Internal
     }
 }

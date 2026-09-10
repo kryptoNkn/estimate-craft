@@ -1,3 +1,6 @@
+# Сборка образа auth-service: сначала cargo --release, потом тонкий debian с бинарём.
+# Контекст сборки — папка backend (Cargo.toml, crates/, migrations/).
+
 FROM rust:1.85-bookworm AS builder
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./

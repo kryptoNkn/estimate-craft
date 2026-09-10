@@ -1,3 +1,6 @@
+# Папка `backend` — весь сервер. Этот файл — Cargo workspace:
+# список крейтов в `crates/`. Пока один: auth-service.
+
 [workspace]
 members = [
     "crates/auth-service",

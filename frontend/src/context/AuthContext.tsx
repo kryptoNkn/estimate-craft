@@ -13,10 +13,11 @@ import { useRouter } from 'next/navigation';
 import {
   fetchCurrentUser,
   loginUser,
+  logoutUser,
   registerUser,
   ApiError,
 } from '@/lib/api';
-import { clearToken, getToken, setToken } from '@/lib/auth-storage';
+import { clearToken, getToken, setTokens } from '@/lib/auth-storage';
 import type { User } from '@/lib/types';
 
 interface AuthContextValue {
@@ -36,15 +37,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
-    const token = getToken();
-
-    if (!token) {
+    if (!getToken()) {
       setUser(null);
       return;
     }
 
     try {
-      const currentUser = await fetchCurrentUser(token);
+      const currentUser = await fetchCurrentUser();
       setUser(currentUser);
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
@@ -61,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(
     async (email: string, password: string) => {
       const response = await loginUser(email, password);
-      setToken(response.access_token);
+      setTokens(response.access_token, response.refresh_token);
       setUser(response.user);
       router.push('/profile');
     },
@@ -77,9 +76,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    clearToken();
-    setUser(null);
-    router.push('/');
+    void logoutUser().finally(() => {
+      clearToken();
+      setUser(null);
+      router.push('/');
+    });
   }, [router]);
 
   const value = useMemo(

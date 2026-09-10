@@ -1,3 +1,6 @@
+# Локальный стек: Postgres + auth-service.
+# Данные БД в volume postgres_data. Порты: 5432 и 8001.
+
 services:
   postgres:
     image: postgres:17
@@ -31,7 +34,10 @@ services:
       SERVER_PORT: 8001
       DATABASE_URL: postgres://auth_user:auth_password@postgres:5432/auth_db
       JWT_SECRET: dev-secret-change-in-production-min-32-chars
-      JWT_EXPIRES_IN_SECS: 3600
+      JWT_ISSUER: constructor-wm-auth
+      JWT_AUDIENCE: constructor-wm-web
+      JWT_ACCESS_EXPIRES_IN_SECS: 900
+      JWT_REFRESH_EXPIRES_IN_SECS: 604800
       CORS_ALLOWED_ORIGIN: http://localhost:3000
     ports:
       - "8001:8001"

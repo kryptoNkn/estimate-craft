@@ -1,3 +1,7 @@
+//! Точка входа auth-сервиса.
+//! Читает env, поднимает логи, пул Postgres, миграции и HTTP-сервер.
+//! Остальная логика разнесена по модулям ниже — сюда её не тащить.
+
 mod app;
 mod config;
 mod state;
@@ -30,7 +34,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let config = Config::from_env()?;
 
-    let db = create_pool(&config.database_url).await?;
+    let db = create_pool(&config.database_url)
+        .await
+        .map_err(|_| "failed to connect to database")?;
 
     sqlx::migrate!("../../migrations")
         .run(&db)
@@ -45,7 +51,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let state = AppState {
         db,
         jwt_secret: config.jwt_secret,
-        jwt_expires_in_secs: config.jwt_expires_in_secs,
+        jwt_issuer: config.jwt_issuer,
+        jwt_audience: config.jwt_audience,
+        jwt_access_expires_in_secs: config.jwt_access_expires_in_secs,
+        jwt_refresh_expires_in_secs: config.jwt_refresh_expires_in_secs,
         cors_allowed_origin: config.cors_allowed_origin,
     };
 

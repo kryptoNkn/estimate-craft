@@ -1,3 +1,6 @@
+-- Папка `backend/migrations` — схема БД, которую sqlx накатывает при старте.
+-- Этот файл: таблица users (email CITEXT unique, роль, хеш пароля).
+
 CREATE EXTENSION IF NOT EXISTS citext;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 

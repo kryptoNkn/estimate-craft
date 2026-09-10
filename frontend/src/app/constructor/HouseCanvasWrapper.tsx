@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import HouseCanvas from './HouseCanvas';
 import { OpeningItem } from './OpeningsManager';
 import { VerandaProps } from './house/VerandaStructure';
+import type { RoofType } from './house/parts/RoofPart';
 
 interface HouseCanvasWrapperProps {
   activeTab: string;
@@ -15,6 +16,10 @@ interface HouseCanvasWrapperProps {
   hasGarage: boolean;
   garageCars: number;
   textureType: string;
+  floorTextureTypes?: string[];
+  roofType?: RoofType;
+  architecturalStyle?: string;
+  jointColor?: string;
   veranda: VerandaProps;
   setVeranda?: React.Dispatch<React.SetStateAction<VerandaProps>>;
   openings: OpeningItem[];

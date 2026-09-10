@@ -1,3 +1,6 @@
+//! Запросы к таблице `users`: создать, найти по email/id, поднять `token_version`.
+//! `token_version` сбрасывает все access JWT при logout-all.
+
 use sqlx::PgPool;
 use uuid::Uuid;
 
@@ -18,7 +21,7 @@ impl UserRepository {
             r#"
             INSERT INTO users (email, password_hash)
             VALUES ($1, $2)
-            RETURNING id, email, password_hash, role, created_at, updated_at
+            RETURNING id, email, password_hash, role, token_version, created_at, updated_at
             "#,
         )
         .bind(email)
@@ -34,7 +37,7 @@ impl UserRepository {
     ) -> Result<Option<User>, AppError> {
         let user = sqlx::query_as::<_, User>(
             r#"
-            SELECT id, email, password_hash, role, created_at, updated_at
+            SELECT id, email, password_hash, role, token_version, created_at, updated_at
             FROM users
             WHERE email = $1
             "#
@@ -51,7 +54,7 @@ impl UserRepository {
     ) -> Result<Option<User>, AppError> {
         let user = sqlx::query_as::<_, User>(
             r#"
-            SELECT id, email, password_hash, role, created_at, updated_at
+            SELECT id, email, password_hash, role, token_version, created_at, updated_at
             FROM users
             WHERE id = $1
             "#,
@@ -61,5 +64,22 @@ impl UserRepository {
         .await?;
 
         Ok(user)
+    }
+
+    pub async fn bump_token_version(
+        pool: &PgPool,
+        user_id: Uuid,
+    ) -> Result<(), AppError> {
+        sqlx::query(
+            r#"
+            UPDATE users
+            SET token_version = token_version + 1
+            WHERE id = $1
+            "#
+        )
+        .bind(user_id)
+        .execute(pool)
+        .await?;
+        Ok(())
     }
 }

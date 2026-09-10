@@ -1,3 +1,6 @@
+//! Создание пула соединений Postgres (sqlx).
+//! URL сюда передают, но не печатают: в нём логин и пароль БД.
+
 use sqlx::{
     postgres::{PgPool, PgPoolOptions}
 };

@@ -1,3 +1,7 @@
+//! Модель пользователя.
+//! `User` — строка из БД, включая `password_hash` (наружу не отдаём).
+//! `UserResponse` — то, что уходит клиенту: id, email, role, дата.
+
 use serde::Serialize;
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
@@ -8,7 +12,9 @@ pub struct User {
     pub email: String,
     pub password_hash: String,
     pub role: String,
+    pub token_version: i32,
     pub created_at: DateTime<Utc>,
+    #[allow(dead_code)]
     pub updated_at: DateTime<Utc>,
 }
 

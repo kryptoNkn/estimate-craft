@@ -1,3 +1,7 @@
+//! HTTP API аутентификации: register, login, refresh, logout, logout-all, /me.
+//! Хендлер тонкий: валидация тела → сервис/репозиторий → JSON.
+//! Роль в ответе берётся из БД, не из JWT.
+
 use axum::{
     Json,
     extract::State,
@@ -7,28 +11,28 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::extractors::auth::AuthUser;
 
 use crate::{
     error::AppError,
+    extractors::auth::AuthUser,
     models::user::UserResponse,
-    repositories::user::UserRepository,
+    repositories::{session::SessionRepository, user::UserRepository},
     services::{
-        jwt::create_token,
-        password::{hash_password, verify_password},
+        jwt::{create_access_token, hash_refresh_token, new_refresh_token, JwtKeys},
+        password::{hash_password, validate_password, verify_password},
     },
     state::AppState,
 };
 
-#[derive(Deserialize, Validate, Debug)]
+#[derive(Deserialize, Validate)]
 pub struct RegisterRequest {
     #[validate(email(message = "Invalid email"))]
     pub email: String,
-    #[validate(length(min = 8, message = "Password must be at least 8 characters"))]
+    #[validate(custom(function = "validate_password"))]
     pub password: String,
 }
 
-#[derive(Deserialize, Validate, Debug)]
+#[derive(Deserialize, Validate)]
 pub struct LoginRequest {
     #[validate(email(message = "Invalid email"))]
     pub email: String,
@@ -37,18 +41,67 @@ pub struct LoginRequest {
 }
 
 #[derive(Serialize)]
-pub struct LoginResponse {
+pub struct TokenResponse {
     pub access_token: String,
+    pub refresh_token: String,
     pub token_type: &'static str,
     pub expires_in: u64,
     pub user: UserResponse,
+}
+
+#[derive(Deserialize, Validate)]
+pub struct RefreshRequest {
+    #[validate(length(min = 1, message = "Refresh token is required"))]
+    pub refresh_token: String,
+}
+
+#[derive(Deserialize, Validate)]
+pub struct LogoutRequest {
+    #[validate(length(min = 1, message = "Refresh token is required"))]
+    pub refresh_token: String,
 }
 
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/register", post(register))
         .route("/login", post(login))
+        .route("/refresh", post(refresh))
+        .route("/logout", post(logout))
+        .route("/logout-all", post(logout_all))
         .route("/me", get(me))
+}
+
+fn jwt_keys(state: &AppState) -> JwtKeys<'_> {
+    JwtKeys {
+        secret: &state.jwt_secret,
+        issuer: &state.jwt_issuer,
+        audience: &state.jwt_audience,
+        access_expires_in_secs: state.jwt_access_expires_in_secs,
+    }
+}
+
+async fn issue_tokens(
+    state: &AppState,
+    user: crate::models::user::User,
+) -> Result<TokenResponse, AppError> {
+    let access_token = create_access_token(&user, &jwt_keys(state))?;
+    let refresh_token = new_refresh_token();
+
+    SessionRepository::create_refresh(
+        &state.db,
+        user.id,
+        &hash_refresh_token(&refresh_token),
+        state.jwt_refresh_expires_in_secs,
+    )
+    .await?;
+
+    Ok(TokenResponse {
+        access_token,
+        refresh_token,
+        token_type: "Bearer",
+        expires_in: state.jwt_access_expires_in_secs,
+        user: user.into_response(),
+    })
 }
 
 async fn register(
@@ -58,13 +111,7 @@ async fn register(
     body.validate()?;
 
     let password_hash = hash_password(&body.password)?;
-
-    let user = UserRepository::create_user(
-        &state.db,
-        &body.email,
-        &password_hash,
-    )
-    .await?;
+    let user = UserRepository::create_user(&state.db, &body.email, &password_hash).await?;
 
     Ok((StatusCode::CREATED, Json(user.into_response())))
 }
@@ -72,37 +119,72 @@ async fn register(
 async fn login(
     State(state): State<AppState>,
     Json(body): Json<LoginRequest>,
-) -> Result<Json<LoginResponse>, AppError> {
+) -> Result<Json<TokenResponse>, AppError> {
     body.validate()?;
 
     let user = UserRepository::find_by_email(&state.db, &body.email).await?;
-
     let user = match user {
         Some(user) if verify_password(&body.password, &user.password_hash)? => user,
         _ => return Err(AppError::Unauthorized("invalid credentials".into())),
     };
 
-    let access_token = create_token(
-        &user,
-        &state.jwt_secret,
-        state.jwt_expires_in_secs,
-    )?;
-
-    Ok(Json(LoginResponse {
-        access_token,
-        token_type: "Bearer",
-        expires_in: state.jwt_expires_in_secs,
-        user: user.into_response(),
-    }))
+    Ok(Json(issue_tokens(&state, user).await?))
 }
 
-async fn me(
+async fn refresh(
     State(state): State<AppState>,
-    auth: AuthUser,
-) -> Result<Json<UserResponse>, AppError> {
-    let user = UserRepository::find_by_id(&state.db, auth.user_id)
+    Json(body): Json<RefreshRequest>,
+) -> Result<Json<TokenResponse>, AppError> {
+    body.validate()?;
+
+    let hash = hash_refresh_token(&body.refresh_token);
+    let session = SessionRepository::find_active_refresh(&state.db, &hash)
+        .await?
+        .ok_or_else(|| AppError::Unauthorized("invalid credentials".into()))?;
+
+    SessionRepository::revoke_refresh(&state.db, session.id).await?;
+
+    let user = UserRepository::find_by_id(&state.db, session.user_id)
         .await?
         .ok_or_else(|| AppError::Unauthorized("user not found".into()))?;
 
-    Ok(Json(user.into_response()))
+    Ok(Json(issue_tokens(&state, user).await?))
+}
+
+async fn logout(
+    State(state): State<AppState>,
+    auth: AuthUser,
+    Json(body): Json<LogoutRequest>,
+) -> Result<StatusCode, AppError> {
+    body.validate()?;
+
+    SessionRepository::denylist_access(&state.db, auth.jti, auth.exp).await?;
+
+    let hash = hash_refresh_token(&body.refresh_token);
+    if let Some(session) = SessionRepository::find_active_refresh(&state.db, &hash).await? {
+        if session.user_id == auth.user_id {
+            SessionRepository::revoke_refresh(&state.db, session.id).await?;
+        }
+    }
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+async fn logout_all(
+    State(state): State<AppState>,
+    auth: AuthUser,
+) -> Result<StatusCode, AppError> {
+    SessionRepository::denylist_access(&state.db, auth.jti, auth.exp).await?;
+    SessionRepository::revoke_all_refresh(&state.db, auth.user_id).await?;
+    UserRepository::bump_token_version(&state.db, auth.user_id).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+async fn me(auth: AuthUser) -> Result<Json<UserResponse>, AppError> {
+    Ok(Json(UserResponse {
+        id: auth.user_id,
+        email: auth.email,
+        role: auth.role,
+        created_at: auth.created_at,
+    }))
 }

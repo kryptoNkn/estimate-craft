@@ -118,6 +118,127 @@
     }
   }
 
+  .presetsSection {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .presetsHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .presetsEyebrow {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    font-weight: 700;
+    color: #717D8D;
+    margin-bottom: 6px;
+  }
+
+  .presetsTitle {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #F2F0E8;
+  }
+
+  .presetsCount {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: #8A93A0;
+  }
+
+  .presetsHint {
+    margin: 0 0 16px;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: #717D8D;
+  }
+
+  .presetsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .presetCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 118px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    background: #13161E;
+    overflow: hidden;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      border-color: rgba(242, 240, 232, 0.18);
+      transform: translateY(-1px);
+    }
+  }
+
+  .presetCardActive {
+    border-color: rgba(242, 240, 232, 0.35);
+    box-shadow: 0 0 0 1px rgba(242, 240, 232, 0.08);
+  }
+
+  .presetAccent {
+    height: 4px;
+    width: 100%;
+  }
+
+  .presetBody {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .presetTopRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .presetTag {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8A93A0;
+    font-weight: 700;
+  }
+
+  .presetName {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #F2F0E8;
+    letter-spacing: 0.02em;
+  }
+
+  .presetDescription {
+    font-size: 0.66rem;
+    line-height: 1.45;
+    color: #717D8D;
+  }
+
   .accordionContainer {
     display: flex;
     flex-direction: column;

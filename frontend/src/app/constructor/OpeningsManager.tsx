@@ -10,6 +10,7 @@ export interface OpeningItem {
   type: 'window' | 'door';
   floor: number;
   perimeterOffset: number;
+  variant?: 'standard' | 'panoramic' | 'minimal';
 }
 
 interface OpeningsManagerProps {

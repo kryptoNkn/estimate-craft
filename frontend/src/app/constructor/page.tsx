@@ -14,6 +14,8 @@ import {
   PALETTE, TEXTURE_TYPES, PARTITION_MATERIALS, 
   FENCE_STYLES, AMK_TEXTURE_PRESETS, AMKColorPreset 
 } from './constants';
+import { HOUSE_PRESETS, createOpeningsFromPreset } from './housePresets';
+import type { RoofType } from './house/parts/RoofPart';
 import { OpeningsUIOverlay, OpeningItem } from './OpeningsManager';
 
 const HouseCanvas = dynamic(() => import('./HouseCanvasWrapper'), { 
@@ -69,6 +71,39 @@ export default function ConstructorPage() {
 
   const [rooms, setRooms] = useState<number>(2);
   const [partitionMaterial, setPartitionMaterial] = useState<string>('drywall');
+  const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
+  const [roofType, setRoofType] = useState<RoofType | undefined>();
+  const [floorTextureTypes, setFloorTextureTypes] = useState<string[] | undefined>();
+  const [architecturalStyle, setArchitecturalStyle] = useState<string | undefined>();
+
+  const applyPreset = (presetId: string) => {
+    const preset = HOUSE_PRESETS.find((item) => item.id === presetId);
+    if (!preset) return;
+
+    const { config } = preset;
+
+    setSelectedPresetId(preset.id);
+    setFloors(config.floors);
+    setHasGarage(config.hasGarage);
+    setGarageCars(config.garageCars);
+    setTextureType(config.textureType);
+    setFoundationType(config.foundationType);
+    setFloorColors(config.floorColors);
+    setVeranda(config.veranda);
+    setRooms(config.rooms);
+    setPartitionMaterial(config.partitionMaterial);
+    setOpenings(createOpeningsFromPreset(config.openings));
+    setRoofType(config.roofType);
+    setFloorTextureTypes(config.floorTextureTypes);
+    setArchitecturalStyle(config.architecturalStyle ?? preset.id);
+
+    if (config.amkPresetId) {
+      const amkPreset = AMK_TEXTURE_PRESETS.find((item) => item.id === config.amkPresetId);
+      if (amkPreset) {
+        setSelectedAmk(amkPreset);
+      }
+    }
+  };
 
   // Функция переключения секции с возможностью сворачивания
   const toggleTab = (tab: 'exterior' | 'interior' | 'veranda') => {
@@ -157,6 +192,10 @@ export default function ConstructorPage() {
           hasGarage={hasGarage}
           garageCars={garageCars}
           textureType={textureType}
+          floorTextureTypes={floorTextureTypes}
+          roofType={roofType}
+          architecturalStyle={architecturalStyle}
+          jointColor={textureType === 'amk' ? selectedAmk.colors[2] : undefined}
           veranda={veranda}
           setVeranda={setVeranda}
           openings={openings}
@@ -174,6 +213,47 @@ export default function ConstructorPage() {
             <div>
               <h1 className={styles.title}>CONFIGURATOR</h1>
               <span className={styles.subtitle}>ARCHITECTURAL STUDIO EDITION</span>
+            </div>
+          </div>
+
+          <div className={styles.presetsSection}>
+            <div className={styles.presetsHeader}>
+              <div>
+                <span className={styles.presetsEyebrow}>ARCHITECTURAL STYLES</span>
+                <h2 className={styles.presetsTitle}>Пресеты домов</h2>
+              </div>
+              <span className={styles.presetsCount}>{HOUSE_PRESETS.length} стилей</span>
+            </div>
+            <p className={styles.presetsHint}>
+              Выберите архитектурный стиль — конфигурация 3D-модели загрузится автоматически.
+            </p>
+
+            <div className={styles.presetsGrid}>
+              {HOUSE_PRESETS.map((preset) => {
+                const isActive = selectedPresetId === preset.id;
+
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    className={`${styles.presetCard} ${isActive ? styles.presetCardActive : ''}`}
+                    onClick={() => applyPreset(preset.id)}
+                  >
+                    <div
+                      className={styles.presetAccent}
+                      style={{ background: preset.accent }}
+                    />
+                    <div className={styles.presetBody}>
+                      <div className={styles.presetTopRow}>
+                        <span className={styles.presetTag}>{preset.tag}</span>
+                        {isActive && <Check size={12} />}
+                      </div>
+                      <span className={styles.presetName}>{preset.name}</span>
+                      <span className={styles.presetDescription}>{preset.description}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
