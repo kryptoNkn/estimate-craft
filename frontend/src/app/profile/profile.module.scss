@@ -268,28 +268,34 @@ $font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
           }
         }
       }
+    }
 
-      .btnFilter {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.6);
-        padding: 8px 18px;
-        border-radius: 100px;
+    .searchField {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 220px;
+
+      .searchLabel {
         font-family: $font-luxury-sans;
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.3s ease;
+        color: rgba(255, 255, 255, 0.4);
+      }
 
-        &:hover {
-          color: #FFFFFF;
-          border-color: rgba(255, 255, 255, 0.3);
-          background: rgba(255, 255, 255, 0.03);
+      input {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #FFFFFF;
+        border-radius: 100px;
+        padding: 8px 16px;
+        font-family: $font-luxury-sans;
+        font-size: 0.8rem;
+        outline: none;
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.35);
         }
       }
     }
@@ -372,19 +378,38 @@ $font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
             font-family: $font-luxury-sans;
             font-size: 0.7rem;
             font-weight: 700;
-            letter-spacing: 0.15em;
+            text-decoration: none;
+            cursor: pointer;
+          }
+
+          .btnDelete {
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            color: #fca5a5;
+            border-radius: 100px;
+            font-family: $font-luxury-sans;
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s ease;
-
-            &:hover {
-              background: #FFFFFF;
-              color: #050608;
-              border-color: #FFFFFF;
-              box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
-            }
           }
         }
+      }
+
+      .btnLoadMore {
+        align-self: center;
+        margin-top: 8px;
+        padding: 10px 22px;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: rgba(255, 255, 255, 0.75);
+        border-radius: 100px;
+        font-family: $font-luxury-sans;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
       }
     }
 
@@ -395,6 +420,91 @@ $font-luxury-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
       font-size: 0.85rem;
       letter-spacing: 0.08em;
       color: rgba(255, 255, 255, 0.4);
+    }
+
+    .securityPanel {
+      padding: 12px 8px 24px;
+      max-width: 420px;
+    }
+
+    .securityHint {
+      margin: 0 0 24px;
+      font-family: $font-luxury-sans;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .securityForm {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-family: $font-luxury-sans;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      input {
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        color: #fff;
+        outline: none;
+      }
+
+      button {
+        margin-top: 8px;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 100px;
+        background: #fff;
+        color: #050608;
+        font-family: $font-luxury-sans;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+    }
+
+    .securityError {
+      color: #f87171;
+      font-size: 0.82rem;
+    }
+
+    .securitySuccess {
+      color: #86efac;
+      font-size: 0.82rem;
+    }
+
+    .securitySessions {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .securityDanger {
+      margin-top: 8px;
+      padding: 12px 18px;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: 100px;
+      background: transparent;
+      color: #fca5a5;
+      font-family: $font-luxury-sans;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
     }
   }
 }

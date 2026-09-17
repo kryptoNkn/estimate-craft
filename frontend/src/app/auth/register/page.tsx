@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
-import { ApiError } from '@/lib/api';
+import { formatApiError } from '@/lib/api';
 import styles from '../auth.module.scss';
 
 export default function RegisterPage() {
@@ -30,11 +30,7 @@ export default function RegisterPage() {
     try {
       await register(email, password);
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError('Не удалось создать аккаунт');
-      }
+      setError(formatApiError(err, 'Не удалось создать аккаунт'));
     } finally {
       setSubmitting(false);
     }
@@ -75,6 +71,7 @@ export default function RegisterPage() {
               onChange={(event) => setPassword(event.target.value)}
               required
               minLength={8}
+              maxLength={128}
             />
           </div>
 
@@ -88,6 +85,7 @@ export default function RegisterPage() {
               onChange={(event) => setConfirmPassword(event.target.value)}
               required
               minLength={8}
+              maxLength={128}
             />
           </div>
 

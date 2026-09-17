@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Sparkles } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
-import { ApiError } from '@/lib/api';
+import { formatApiError, safeInternalPath } from '@/lib/api';
 import styles from '../auth.module.scss';
 
-export default function LoginPage() {
+function LoginForm() {
   const { login } = useAuth();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -21,13 +23,9 @@ export default function LoginPage() {
     setSubmitting(true);
 
     try {
-      await login(email, password);
+      await login(email, password, safeInternalPath(searchParams.get('next')));
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError('Не удалось выполнить вход');
-      }
+      setError(formatApiError(err, 'Не удалось выполнить вход'));
     } finally {
       setSubmitting(false);
     }
@@ -68,6 +66,7 @@ export default function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               required
               minLength={8}
+              maxLength={128}
             />
           </div>
 
@@ -79,9 +78,20 @@ export default function LoginPage() {
         </form>
 
         <p className={styles.footer}>
+          <Link href="/auth/forgot-password">Забыли пароль?</Link>
+        </p>
+        <p className={styles.footer}>
           Нет аккаунта? <Link href="/auth/register">Зарегистрироваться</Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

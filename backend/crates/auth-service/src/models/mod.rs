@@ -2,3 +2,4 @@
 //! (пользователь, DTO ответа). Не SQL и не HTTP-роуты.
 
 pub mod user;
+pub mod project;

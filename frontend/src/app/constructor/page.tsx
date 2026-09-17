@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from '@react-spring/web';
 import { 
@@ -17,6 +18,18 @@ import {
 import { HOUSE_PRESETS, createOpeningsFromPreset } from './housePresets';
 import type { RoofType } from './house/parts/RoofPart';
 import { OpeningsUIOverlay, OpeningItem } from './OpeningsManager';
+import { useAuth } from '@/context/AuthContext';
+import {
+  createProject,
+  formatApiError,
+  getProject,
+  updateProject,
+} from '@/lib/api';
+import {
+  stashConstructorDraft,
+  takeConstructorDraft,
+} from '@/lib/constructor-draft';
+import type { HouseProjectConfig } from '@/lib/types';
 
 const HouseCanvas = dynamic(() => import('./HouseCanvasWrapper'), { 
   ssr: false,
@@ -39,6 +52,19 @@ function AnimatedPrice({ value }: { value: number }) {
 }
 
 export default function ConstructorPage() {
+  return (
+    <Suspense fallback={<div className={styles.canvasLoader} />}>
+      <ConstructorWorkspace />
+    </Suspense>
+  );
+}
+
+function ConstructorWorkspace() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
+  const projectId = searchParams.get('project');
+
   // По умолчанию все секции аккордеона могут быть свернуты (null)
   const [activeTab, setActiveTab] = useState<'exterior' | 'interior' | 'veranda' | null>(null);
 
@@ -75,6 +101,109 @@ export default function ConstructorPage() {
   const [roofType, setRoofType] = useState<RoofType | undefined>();
   const [floorTextureTypes, setFloorTextureTypes] = useState<string[] | undefined>();
   const [architecturalStyle, setArchitecturalStyle] = useState<string | undefined>();
+  const [projectTitle, setProjectTitle] = useState('Мой дом');
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [projectVersion, setProjectVersion] = useState<number | null>(null);
+
+  const collectConfig = (): HouseProjectConfig => ({
+    floors,
+    hasGarage,
+    garageCars,
+    textureType,
+    foundationType,
+    floorColors,
+    floorTextureTypes,
+    roofType,
+    architecturalStyle,
+    amkPresetId: selectedAmk.id,
+    selectedPresetId,
+    veranda,
+    rooms,
+    partitionMaterial,
+    openings,
+  });
+
+  const applyConfig = (config: HouseProjectConfig) => {
+    setFloors(config.floors);
+    setHasGarage(config.hasGarage);
+    setGarageCars(config.garageCars);
+    setTextureType(config.textureType);
+    setFoundationType(config.foundationType);
+    setFloorColors(config.floorColors);
+    setVeranda(config.veranda);
+    setRooms(config.rooms);
+    setPartitionMaterial(config.partitionMaterial);
+    setRoofType(config.roofType as RoofType | undefined);
+    setFloorTextureTypes(config.floorTextureTypes);
+    setArchitecturalStyle(config.architecturalStyle);
+    setSelectedPresetId(config.selectedPresetId ?? null);
+    setOpenings(
+      (config.openings ?? []).map((item, index) => ({
+        id: item.id ?? `${index}`,
+        type: item.type === 'door' ? 'door' : 'window',
+        floor: item.floor,
+        perimeterOffset: item.perimeterOffset,
+        variant: item.variant as OpeningItem['variant'],
+      })),
+    );
+
+    if (config.amkPresetId) {
+      const amkPreset = AMK_TEXTURE_PRESETS.find((item) => item.id === config.amkPresetId);
+      if (amkPreset) {
+        setSelectedAmk(amkPreset);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function hydrate() {
+      if (projectId) {
+        if (!user) {
+          router.replace(`/auth/login?next=${encodeURIComponent(`/constructor?project=${projectId}`)}`);
+          return;
+        }
+
+        try {
+          const project = await getProject(projectId);
+          if (cancelled) {
+            return;
+          }
+          setProjectTitle(project.title);
+          setProjectVersion(project.version);
+          applyConfig(project.config);
+        } catch (error) {
+          if (!cancelled) {
+            setSaveError(formatApiError(error, 'Не удалось открыть проект'));
+          }
+        }
+        return;
+      }
+
+      if (user) {
+        const draft = takeConstructorDraft();
+        if (draft) {
+          setProjectTitle(draft.title);
+          applyConfig(draft.config);
+        }
+        setProjectVersion(null);
+      }
+    }
+
+    void hydrate();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, projectId, user]);
 
   const applyPreset = (presetId: string) => {
     const preset = HOUSE_PRESETS.find((item) => item.id === presetId);
@@ -133,8 +262,40 @@ export default function ConstructorPage() {
     }
   };
 
-  const handleSave = () => {
-    alert('Конфигурация сохранена');
+  const handleSave = async () => {
+    const config = collectConfig();
+    const title = projectTitle.trim() || 'Мой дом';
+
+    if (!user) {
+      stashConstructorDraft({ title, config });
+      router.push(`/auth/login?next=${encodeURIComponent('/constructor')}`);
+      return;
+    }
+
+    setSaving(true);
+    setSaveError(null);
+    setSaveMessage(null);
+
+    try {
+      if (projectId) {
+        if (projectVersion === null) {
+          setSaveError('Проект ещё не загрузился. Подождите и сохраните снова.');
+          return;
+        }
+        const saved = await updateProject(projectId, title, config, projectVersion);
+        setProjectVersion(saved.version);
+        setSaveMessage('Сохранено');
+      } else {
+        const created = await createProject(title, config);
+        setProjectVersion(created.version);
+        setSaveMessage('Сохранено');
+        router.replace(`/constructor?project=${created.id}`);
+      }
+    } catch (error) {
+      setSaveError(formatApiError(error, 'Не удалось сохранить проект'));
+    } finally {
+      setSaving(false);
+    }
   };
 
   const totalPrice = useMemo(() => {
@@ -575,11 +736,16 @@ export default function ConstructorPage() {
                 <Share2 size={14} />
                 <span>ПОДЕЛИТЬСЯ</span>
               </button>
-              <button className={styles.btnSecondary} onClick={handleSave}>
+              <button className={styles.btnSecondary} onClick={() => void handleSave()} disabled={saving}>
                 <Bookmark size={14} />
-                <span>СОХРАНИТЬ</span>
+                <span>{saving ? 'СОХРАНЯЕМ...' : 'СОХРАНИТЬ'}</span>
               </button>
             </div>
+            {(saveMessage || saveError) && (
+              <p className={saveError ? styles.saveError : styles.saveStatus}>
+                {saveError ?? saveMessage}
+              </p>
+            )}
 
             <button 
               className={styles.btnPrimary} 

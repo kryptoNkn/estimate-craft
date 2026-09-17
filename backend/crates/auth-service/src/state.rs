@@ -4,6 +4,8 @@
 
 use sqlx::PgPool;
 
+use crate::services::mail::Mailer;
+
 #[derive(Clone)]
 pub struct AppState {
     pub db: PgPool,
@@ -13,4 +15,7 @@ pub struct AppState {
     pub jwt_access_expires_in_secs: u64,
     pub jwt_refresh_expires_in_secs: u64,
     pub cors_allowed_origin: String,
+    pub frontend_origin: String,
+    pub password_reset_expires_in_secs: u64,
+    pub mailer: Mailer,
 }

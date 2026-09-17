@@ -9,7 +9,7 @@ COPY migrations ./migrations
 RUN cargo build --release -p auth-service
 FROM debian:bookworm-slim AS runtime
 RUN apt-get update \
-    && apt-get install -y ca-certificates \
+    && apt-get install -y ca-certificates libssl3 \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=builder /app/target/release/auth-service /app/auth-service

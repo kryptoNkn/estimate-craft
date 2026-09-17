@@ -126,4 +126,57 @@ impl SessionRepository {
 
         Ok(found.is_some())
     }
+
+    pub async fn purge_expired(pool: &PgPool) -> Result<PurgeStats, AppError> {
+        let refresh = sqlx::query(
+            r#"
+            DELETE FROM refresh_tokens
+            WHERE expires_at < NOW()
+               OR revoked_at IS NOT NULL
+            "#,
+        )
+        .execute(pool)
+        .await?
+        .rows_affected();
+
+        let denylist = sqlx::query(
+            r#"
+            DELETE FROM access_token_denylist
+            WHERE expires_at < NOW()
+            "#,
+        )
+        .execute(pool)
+        .await?
+        .rows_affected();
+
+        let password_reset = sqlx::query(
+            r#"
+            DELETE FROM password_reset_tokens
+            WHERE expires_at < NOW()
+               OR used_at IS NOT NULL
+            "#,
+        )
+        .execute(pool)
+        .await?
+        .rows_affected();
+
+        Ok(PurgeStats {
+            refresh,
+            denylist,
+            password_reset,
+        })
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct PurgeStats {
+    pub refresh: u64,
+    pub denylist: u64,
+    pub password_reset: u64,
+}
+
+impl PurgeStats {
+    pub fn total(self) -> u64 {
+        self.refresh + self.denylist + self.password_reset
+    }
 }

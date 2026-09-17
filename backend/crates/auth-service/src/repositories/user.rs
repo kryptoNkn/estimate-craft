@@ -82,4 +82,26 @@ impl UserRepository {
         .await?;
         Ok(())
     }
+
+    pub async fn update_password(
+        pool: &PgPool,
+        user_id: Uuid,
+        password_hash: &str,
+    ) -> Result<User, AppError> {
+        let user = sqlx::query_as::<_, User>(
+            r#"
+            UPDATE users
+            SET password_hash = $2,
+                token_version = token_version + 1
+            WHERE id = $1
+            RETURNING id, email, password_hash, role, token_version, created_at, updated_at
+            "#,
+        )
+        .bind(user_id)
+        .bind(password_hash)
+        .fetch_one(pool)
+        .await?;
+
+        Ok(user)
+    }
 }

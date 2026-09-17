@@ -90,6 +90,16 @@
   font-size: 0.92rem;
 }
 
+.success {
+  padding: 12px 14px;
+  border-radius: $radius-md;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #bbf7d0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .submit {
   margin-top: 8px;
   padding: 14px 18px;

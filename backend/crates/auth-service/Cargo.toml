@@ -12,7 +12,7 @@ tokio = { version = "1", features = ["full"] }
 dotenvy = "0.15"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tower-http = { version = "0.6", features = ["trace", "cors"] }
+tower-http = { version = "0.6", features = ["trace", "cors", "timeout"] }
 argon2 = "0.5"
 serde = { version = "1", features = ["derive"] }
 validator = { version = "0.20", features = ["derive"] }
@@ -21,6 +21,17 @@ uuid = { version = "1", features = ["serde", "v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 jsonwebtoken = "9"
 sha2 = "0.10"
+tower_governor = { version = "0.8", features = ["axum"] }
+governor = "0.10"
+lettre = { version = "0.11", default-features = false, features = [
+    "builder",
+    "hostname",
+    "smtp-transport",
+    "tokio1-native-tls",
+] }
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
 
 [dependencies.sqlx]
 version = "0.8"
@@ -31,5 +42,6 @@ features = [
     "uuid",
     "chrono",
     "derive",
-    "migrate"
+    "migrate",
+    "json"
 ]

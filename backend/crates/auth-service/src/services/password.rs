@@ -15,6 +15,22 @@ use crate::error::AppError;
 
 const MIN_LEN_MVP: usize = 8;
 const MIN_LEN_PROD: usize = 12;
+const MAX_LEN: usize = 128;
+
+/// Валидный Argon2-хеш с теми же параметрами, что и боевые.
+/// Нужен, чтобы логин неизвестного email всё равно считал Argon2.
+static DUMMY_PASSWORD_HASH: std::sync::LazyLock<String> = std::sync::LazyLock::new(|| {
+    hash_password("timing-oracle-dummy-password").expect("dummy password hash")
+});
+
+pub fn dummy_password_hash() -> &'static str {
+    DUMMY_PASSWORD_HASH.as_str()
+}
+
+/// Считать dummy-хеш при старте, чтобы первый «нет такого email» не был дольше.
+pub fn warmup_dummy_hash() {
+    let _ = dummy_password_hash();
+}
 
 const COMMON_PASSWORDS: &[&str] = &[
     "password",
@@ -50,9 +66,15 @@ pub fn validate_password(password: &str) -> Result<(), ValidationError> {
     } else {
         MIN_LEN_MVP
     };
-    if password.chars().count() < min_len {
+    let len = password.chars().count();
+    if len < min_len {
         let mut error = ValidationError::new("password_too_short");
         error.message = Some(format!("Password must be at least {min_len} characters").into());
+        return Err(error);
+    }
+    if len > MAX_LEN {
+        let mut error = ValidationError::new("password_too_long");
+        error.message = Some(format!("Password must be at most {MAX_LEN} characters").into());
         return Err(error);
     }
     if is_production() {
@@ -68,6 +90,12 @@ pub fn validate_password(password: &str) -> Result<(), ValidationError> {
 
 // хеширование пароля
 pub fn hash_password(password: &str) -> Result<String, AppError> {
+    if password.chars().count() > MAX_LEN {
+        return Err(AppError::Validation(format!(
+            "Password must be at most {MAX_LEN} characters"
+        )));
+    }
+
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
 
@@ -81,6 +109,10 @@ pub fn hash_password(password: &str) -> Result<String, AppError> {
 
 // сравнение пароля и хеша пароля
 pub fn verify_password(password: &str, password_hash: &str) -> Result<bool, AppError> {
+    if password.chars().count() > MAX_LEN {
+        return Ok(false);
+    }
+
     let parsed_hash = PasswordHash::new(password_hash)
         .map_err(|_| AppError::Internal)?;
 

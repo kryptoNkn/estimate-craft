@@ -33,12 +33,21 @@ services:
       SERVER_HOST: 0.0.0.0
       SERVER_PORT: 8001
       DATABASE_URL: postgres://auth_user:auth_password@postgres:5432/auth_db
-      JWT_SECRET: dev-secret-change-in-production-min-32-chars
+      JWT_SECRET: local-dev-only-constructor-wm-jwt-secret-do-not-ship
       JWT_ISSUER: constructor-wm-auth
       JWT_AUDIENCE: constructor-wm-web
       JWT_ACCESS_EXPIRES_IN_SECS: 900
       JWT_REFRESH_EXPIRES_IN_SECS: 604800
+      PASSWORD_RESET_EXPIRES_IN_SECS: 3600
+      SESSION_CLEANUP_INTERVAL_SECS: 3600
       CORS_ALLOWED_ORIGIN: http://localhost:3000
+      FRONTEND_ORIGIN: http://localhost:3000
+      TRUST_PROXY: "false"
+      # Без SMTP_HOST ссылка сброса пароля пишется в лог контейнера.
+      # SMTP_HOST: mailpit
+      # SMTP_PORT: 1025
+      # SMTP_TLS: none
+      # SMTP_FROM: Constructor WM <noreply@localhost>
     ports:
       - "8001:8001"
 

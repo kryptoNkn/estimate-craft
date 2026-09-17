@@ -588,6 +588,21 @@
         }
       }
 
+      .saveStatus,
+      .saveError {
+        margin: 4px 0 0;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+      }
+
+      .saveStatus {
+        color: rgba(134, 239, 172, 0.9);
+      }
+
+      .saveError {
+        color: #fca5a5;
+      }
+
       .btnPrimary {
         width: 100%;
         background: #F2F0E8;

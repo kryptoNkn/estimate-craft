@@ -2,24 +2,19 @@
 //! Читает env, поднимает логи, пул Postgres, миграции и HTTP-сервер.
 //! Остальная логика разнесена по модулям ниже — сюда её не тащить.
 
-mod app;
-mod config;
-mod state;
-mod error;
-mod db;
-mod models;
-mod repositories;
-mod services;
-mod routes;
-mod extractors;
+use std::net::SocketAddr;
 
-use crate::{config::Config, state::AppState};
-
-use std::{net::SocketAddr};
 use tokio::net::TcpListener;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
-use db::create_pool;
+
+use auth_service::{
+    app, cleanup,
+    config::Config,
+    db::create_pool,
+    services::password,
+    state::AppState,
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -33,6 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     let config = Config::from_env()?;
+    password::warmup_dummy_hash();
 
     let db = create_pool(&config.database_url)
         .await
@@ -48,6 +44,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         config.server_port,
     );
 
+    cleanup::spawn(db.clone(), config.session_cleanup_interval_secs);
+
+    let mailer = auth_service::services::mail::Mailer::from_settings(&config.smtp)
+        .map_err(|err| std::io::Error::other(err))?;
+    if config.smtp.host.is_none() {
+        info!("SMTP_HOST is empty: password reset links go to the auth-service log");
+    }
+
     let state = AppState {
         db,
         jwt_secret: config.jwt_secret,
@@ -56,13 +60,52 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         jwt_access_expires_in_secs: config.jwt_access_expires_in_secs,
         jwt_refresh_expires_in_secs: config.jwt_refresh_expires_in_secs,
         cors_allowed_origin: config.cors_allowed_origin,
+        frontend_origin: config.frontend_origin,
+        password_reset_expires_in_secs: config.password_reset_expires_in_secs,
+        mailer,
     };
 
     let listener = TcpListener::bind(address).await?;
     let app = app::create_app(state);
-    info!("auth-service listening on {}", address);
+    info!(
+        trust_proxy = config.trust_proxy,
+        "auth-service listening on {}",
+        address
+    );
 
-    axum::serve(listener, app).await?;
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .with_graceful_shutdown(shutdown_signal())
+    .await?;
 
+    info!("auth-service stopped");
     Ok(())
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+            .expect("failed to install SIGTERM handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
+
+    info!("shutdown signal received");
 }
